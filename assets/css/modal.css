@@ -1,0 +1,46 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 520px;
+  background: #161a22;
+  border-radius: 18px 18px 0 0;
+  padding: 20px;
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.modal-content p {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.close {
+  position: absolute;
+  right: 18px;
+  top: 12px;
+  font-size: 26px;
+  cursor: pointer;
+  color: #9ca3af;
+}

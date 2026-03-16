@@ -1,0 +1,116 @@
+/* ===== ОСНОВНЫЕ ПЕРЕМЕННЫЕ ===== */
+:root {
+    --bg-main: #0f1115;
+    --bg-card: #181b22;
+    --border: #262a33;
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+    --accent: #4f46e5;
+    --accent-hover: #6366f1;
+    --danger: #ef4444;
+}
+
+/* ===== ОСНОВА ===== */
+body {
+    background: var(--bg-main);
+    color: var(--text-main);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ===== КОНТЕЙНЕР ===== */
+.profile-edit {
+    max-width: 420px;
+    margin: 60px auto;
+    padding: 0 15px;
+}
+
+/* ===== ЗАГОЛОВОК ===== */
+.profile-edit h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* ===== КАРТОЧКА ===== */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.4);
+}
+
+/* ===== АВАТАР ===== */
+.avatar-block {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.avatar-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--border);
+}
+
+/* ===== LABEL ===== */
+label {
+    display: block;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* ===== INPUT ===== */
+input[type="text"],
+input[type="file"] {
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #101318;
+    color: var(--text-main);
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* ===== КНОПКА ===== */
+button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease, transform .1s ease;
+}
+
+button:hover {
+    background: var(--accent-hover);
+}
+
+button:active {
+    transform: scale(.97);
+}
+
+/* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ===== */
+@media (max-width: 480px) {
+    .profile-edit {
+        margin-top: 30px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+}

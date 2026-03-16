@@ -1,0 +1,83 @@
+body {
+    background: #0e0e11;
+    color: #e0e0e0;
+    font-family: system-ui;
+}
+
+.profile {
+    max-width: 800px;
+    margin: 40px auto;
+    display: grid;
+    gap: 20px;
+}
+
+.card {
+    background: #15151c;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 0 0 1px #222;
+}
+
+.profile-main {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.profile-main a{
+    color: white;
+    text-decoration: none;
+}
+.avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 2px solid #333;
+}
+
+.xp-bar {
+    height: 10px;
+    background: #222;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 6px 0;
+}
+
+.xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffc107, #ff9800);
+}
+
+.stat {
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.bar {
+    height: 8px;
+    background: #222;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+}
+
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activity-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid #222;
+}
+
+.muted {
+    color: #777;
+}
