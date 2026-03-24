@@ -9,6 +9,8 @@ if (!$userId) {
     exit;
 }
 
+$userId = (int)$userId;
+
 /* ===== НИКНЕЙМ ===== */
 $username = trim($_POST['username'] ?? '');
 
@@ -16,6 +18,9 @@ if ($username === '') {
     header('Location: ../../profile_edit.php?error=username');
     exit;
 }
+
+// защита
+$username = mysqli_real_escape_string($conn, $username);
 
 /* ===== АВАТАР ===== */
 $avatarName = null;
@@ -41,35 +46,36 @@ if (!empty($_FILES['avatar']['name'])) {
     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
     $avatarName = 'avatar_' . $userId . '.' . $extension;
 
-   $uploadDir = __DIR__ . '/../../uploads/avatars/';
+    $uploadDir = __DIR__ . '/../../uploads/avatars/';
 
-if (!is_dir($uploadDir)) {
-    mkdir($uploadDir, 0755, true);
-}
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
 
-$uploadPath = $uploadDir . $avatarName;
+    $uploadPath = $uploadDir . $avatarName;
 
-if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
-    die('Не удалось сохранить файл');
-}
+    if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
+        die('Не удалось сохранить файл');
+    }
 }
 
 /* ===== ОБНОВЛЕНИЕ USERS ===== */
-$stmt = $db->prepare("
+mysqli_query($conn, "
     UPDATE users
-    SET username = ?
-    WHERE id = ?
+    SET username = '$username'
+    WHERE id = $userId
 ");
-$stmt->execute([$username, $userId]);
 
 /* ===== ОБНОВЛЕНИЕ USER_PROFILE ===== */
 if ($avatarName) {
-    $stmt = $db->prepare("
+
+    $avatarName = mysqli_real_escape_string($conn, $avatarName);
+
+    mysqli_query($conn, "
         UPDATE user_profile
-        SET avatar = ?
-        WHERE user_id = ?
+        SET avatar = '$avatarName'
+        WHERE user_id = $userId
     ");
-    $stmt->execute([$avatarName, $userId]);
 }
 
 /* ===== СЕССИЯ ===== */

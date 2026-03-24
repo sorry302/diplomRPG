@@ -2,22 +2,24 @@
 
 class ExperienceService
 {
-    private PDO $db;
+    private $conn;
 
-    public function __construct(PDO $db)
+    public function __construct($conn)
     {
-        $this->db = $db;
+        $this->conn = $conn;
     }
 
     public function addExp(int $userId, int $amount): void
     {
+        $userId = (int)$userId;
+        $amount = (int)$amount;
+
         // Добавляем опыт
-        $stmt = $this->db->prepare("
+        mysqli_query($this->conn, "
             UPDATE experience
-            SET exp = exp + ?
-            WHERE user_id = ?
+            SET exp = exp + $amount
+            WHERE user_id = $userId
         ");
-        $stmt->execute([$amount, $userId]);
 
         // Проверяем ап уровня
         $this->checkLevelUp($userId);
@@ -25,52 +27,45 @@ class ExperienceService
 
     private function checkLevelUp(int $userId): void
     {
+        $userId = (int)$userId;
+
         // Текущий опыт и уровень
-        $stmt = $this->db->prepare("
-            SELECT exp, level
-            FROM experience
-            WHERE user_id = ?
+        $result = mysqli_query($this->conn, " SELECT exp, level FROM experience WHERE user_id = $userId
         ");
-        $stmt->execute([$userId]);
-        $expData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $expData = mysqli_fetch_assoc($result);
 
         if (!$expData) {
             return;
         }
 
-        $currentExp = (int)$expData['exp'];
+        $currentExp   = (int)$expData['exp'];
         $currentLevel = (int)$expData['level'];
 
         // Сколько нужно XP для следующего уровня
-        $stmt = $this->db->prepare("
-            SELECT required_exp
-            FROM levels
-            WHERE level = ?
-        ");
-        $stmt->execute([$currentLevel + 1]);
-        $nextLevel = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = mysqli_query($this->conn, "SELECT required_exp FROM levels WHERE level = " . ($currentLevel + 1));
+
+        $nextLevel = mysqli_fetch_assoc($result);
 
         if (!$nextLevel) {
-            return; // максимальный уровень
+            return; 
         }
 
-        if ($currentExp >= $nextLevel['required_exp']) {
+        if ($currentExp >= (int)$nextLevel['required_exp']) {
             $this->levelUp($userId, $currentLevel + 1);
         }
     }
 
     private function levelUp(int $userId, int $newLevel): void
     {
-        $stmt = $this->db->prepare("
-            UPDATE experience
-            SET level = ?
-            WHERE user_id = ?
-        ");
-        $stmt->execute([$newLevel, $userId]);
+        $userId   = (int)$userId;
+        $newLevel = (int)$newLevel;
 
-        // 💡 Здесь потом:
-        // + восстановление энергии
-        // + бонус к статам
-        // + уведомление игроку
+        mysqli_query($this->conn, "
+            UPDATE experience
+            SET level = $newLevel
+            WHERE user_id = $userId
+        ");
+
     }
 }

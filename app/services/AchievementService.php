@@ -2,120 +2,147 @@
 
 class AchievementService
 {
-    private PDO $db;
+    private $conn;
     private int $userId;
 
-    public function __construct(PDO $db, int $userId)
+    public function __construct($conn, int $userId)
     {
-        $this->db = $db;
-        $this->userId = $userId;
+        $this->conn = $conn;
+        $this->userId = (int)$userId;
     }
 
     public function checkAll(): void
-{
-    $stmt = $this->db->query("
-        SELECT 
-            a.id as achievement_id,
-            ac.condition_type,
-            ac.condition_value
-        FROM achievements a
-        JOIN achievement_conditions ac 
-            ON ac.achievement_id = a.id
-    ");
+    {
+        $result = mysqli_query($this->conn, "
+            SELECT 
+                a.id as achievement_id,
+                ac.condition_type,
+                ac.condition_value
+            FROM achievements a
+            JOIN achievement_conditions ac 
+                ON ac.achievement_id = a.id
+        ");
 
-    $conditions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $achievements = [];
 
-    foreach ($conditions as $cond) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $achievements[$row['achievement_id']][] = [
+                'type' => $row['condition_type'],
+                'value' => (int)$row['condition_value']
+            ];
+        }
 
-        if ($this->checkCondition(
-            $cond['condition_type'],
-            (int)$cond['condition_value']
-        )) {
-            $this->unlock($cond['achievement_id']);
+        foreach ($achievements as $achievementId => $conditions) {
+            $allMet = true;
+
+            foreach ($conditions as $cond) {
+                if (!$this->checkCondition($cond['type'], $cond['value'])) {
+                    $allMet = false;
+                    break;
+                }
+            }
+
+            if ($allMet) {
+                $this->unlock((int)$achievementId);
+            }
         }
     }
-}
 
     private function checkCondition(string $type, int $value): bool
-{
-    switch ($type) {
+    {
+        $userId = $this->userId;
 
-        case 'food_count':
+        switch ($type) {
 
-            $stmt = $this->db->prepare("
-                SELECT COUNT(*) 
-                FROM food_logs
-                WHERE user_id = ?
-            ");
+            case 'food_count':
+            case 'eat_count':
 
-            $stmt->execute([$this->userId]);
+                $result = mysqli_query($this->conn, "
+                    SELECT SUM(portions) as total
+                    FROM food_logs
+                    WHERE user_id = $userId
+                ");
 
-            return $stmt->fetchColumn() >= $value;
-
-
-        case 'activity_count':
-
-            $stmt = $this->db->prepare("
-                SELECT COUNT(*) 
-                FROM activity_logs
-                WHERE user_id = ?
-            ");
-
-            $stmt->execute([$this->userId]);
-
-            return $stmt->fetchColumn() >= $value;
+                $row = mysqli_fetch_assoc($result);
+                return (int)$row['total'] >= $value;
 
 
-        case 'level':
+            case 'activity_count':
 
-            $stmt = $this->db->prepare("
-                SELECT level 
-                FROM experience
-                WHERE user_id = ?
-            ");
+                $result = mysqli_query($this->conn, "
+                    SELECT SUM(quantity) as total
+                    FROM activity_logs
+                    WHERE user_id = $userId
+                ");
 
-            $stmt->execute([$this->userId]);
+                $row = mysqli_fetch_assoc($result);
+                return (int)$row['total'] >= $value;
 
-            return $stmt->fetchColumn() >= $value;
+
+            case 'level':
+            case 'level_reach':
+
+                $result = mysqli_query($this->conn, "
+                    SELECT level 
+                    FROM experience
+                    WHERE user_id = $userId
+                ");
+
+                $row = mysqli_fetch_assoc($result);
+                return (int)$row['level'] >= $value;
 
 
-        case 'exp':
+            case 'exp':
 
-            $stmt = $this->db->prepare("
-                SELECT exp 
-                FROM experience
-                WHERE user_id = ?
-            ");
+                $result = mysqli_query($this->conn, "
+                    SELECT exp 
+                    FROM experience
+                    WHERE user_id = $userId
+                ");
 
-            $stmt->execute([$this->userId]);
+                $row = mysqli_fetch_assoc($result);
+                return (int)$row['exp'] >= $value;
 
-            return $stmt->fetchColumn() >= $value;
 
+            case 'stat_physical':
+            case 'stat_intellect':
+            case 'stat_spiritual':
+
+                $statCode = str_replace('stat_', '', $type);
+                $statCode = mysqli_real_escape_string($this->conn, $statCode);
+
+                $result = mysqli_query($this->conn, "
+                    SELECT value 
+                    FROM user_stats
+                    WHERE user_id = $userId AND stat_code = '$statCode'
+                ");
+
+                $row = mysqli_fetch_assoc($result);
+                return (int)($row['value'] ?? 0) >= $value;
+        }
+
+        return false;
     }
 
-    return false;
-}
-
     private function unlock(int $achievementId): void
-{
-    $stmt = $this->db->prepare("
-        SELECT 1 
-        FROM user_achievements
-        WHERE user_id = ?
-        AND achievement_id = ?
-    ");
+    {
+        $userId = $this->userId;
+        $achievementId = (int)$achievementId;
 
-    $stmt->execute([$this->userId, $achievementId]);
+        $result = mysqli_query($this->conn, "
+            SELECT 1 
+            FROM user_achievements
+            WHERE user_id = $userId
+            AND achievement_id = $achievementId
+        ");
 
-    if ($stmt->fetch())
-        return;
+        if ($result && mysqli_fetch_assoc($result)) {
+            return;
+        }
 
-    $stmt = $this->db->prepare("
-        INSERT INTO user_achievements
-        (user_id, achievement_id)
-        VALUES (?, ?)
-    ");
-
-    $stmt->execute([$this->userId, $achievementId]);
-}
+        mysqli_query($this->conn, "
+            INSERT INTO user_achievements (user_id, achievement_id)
+            VALUES ($userId, $achievementId)
+        ");
+    }
 }

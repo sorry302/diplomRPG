@@ -10,17 +10,18 @@ if (!$userId) {
     exit;
 }
 
+$userId = (int)$userId;
 $activityId = (int)($_POST['activity_id'] ?? 0);
-$quantity   = max(1, (int)($_POST['quantity'] ?? 1));//получаем количество повторений
+$quantity   = max(1, (int)($_POST['quantity'] ?? 1)); // количество повторений
 
-// Получаем активность ТОЛЬКО spiritual
-$stmt = $db->prepare("
+// Получаем активность
+$result = mysqli_query($conn, "
     SELECT *
     FROM activities
-    WHERE id = ? AND category = 'spiritual'
+    WHERE id = $activityId AND category = 'spiritual'
 ");
-$stmt->execute([$activityId]);
-$activity = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$activity = mysqli_fetch_assoc($result);
 
 if (!$activity) {
     header('Location: /index.php');
@@ -28,64 +29,54 @@ if (!$activity) {
 }
 
 // Расчёт эффектов
-$expChange    = $activity['exp_change'] * $quantity;
-$spiritualChange    = $activity['spiritual_change'] * $quantity;
-$intellectualChange    = $activity['intellectual_change'] * $quantity;
+$expChange         = $activity['exp_change'] * $quantity;
+$spiritualChange   = $activity['spiritual_change'] * $quantity;
+$intellectualChange = $activity['intellectual_change'] * $quantity;
 
-$db->beginTransaction();
-
-$expService = new ExperienceService($db);
-$expService->addExp($userId, $activity['exp_change'] * $portions);
+mysqli_begin_transaction($conn);
 
 try {
+
     // Лог активности
-    $stmt = $db->prepare("
+    mysqli_query($conn, "
         INSERT INTO activity_logs (user_id, activity_id, quantity)
-        VALUES (?, ?, ?)
+        VALUES ($userId, $activityId, $quantity)
     ");
-    $stmt->execute([$userId, $activityId, $quantity]);
 
-    // Жир
-    $stmt = $db->prepare("
+    // Духовность
+    mysqli_query($conn, "
         UPDATE user_stats
-        SET value = LEAST(100, GREATEST(0, value + ?))
-        WHERE user_id = ? AND stat_code = 'spiritual'
+        SET value = LEAST(100, GREATEST(0, value + $spiritualChange))
+        WHERE user_id = $userId AND stat_code = 'spiritual'
     ");
-    $stmt->execute([$spiritualChange, $userId]);
 
-    // интеллект
-    $stmt = $db->prepare("
+    // Интеллект
+    mysqli_query($conn, "
         UPDATE user_stats
-        SET value = LEAST(100, GREATEST(0, value + ?))
-        WHERE user_id = ? AND stat_code = 'intellect'
+        SET value = LEAST(100, GREATEST(0, value + $intellectualChange))
+        WHERE user_id = $userId AND stat_code = 'intellect'
     ");
-    $stmt->execute([$intellectualChange, $userId]);
 
     // Опыт
-    $stmt = $db->prepare("
-        INSERT INTO experience (user_id, exp)
-        VALUES (?, ?)
-        ON DUPLICATE KEY UPDATE exp = exp + VALUES(exp)
-    ");
-    $stmt->execute([$userId, $expChange]);
+    $expService = new ExperienceService($conn);
+    $expService->addExp($userId, $expChange);
 
-    $db->commit();
+    mysqli_commit($conn);
 
-    $achievement = new AchievementService($db, $userId);
-$achievement->checkAll();
+    // Достижения
+    $achievement = new AchievementService($conn, $userId);
+    $achievement->checkAll();
 
-
-    
-     $_SESSION['action_feedback'] = [
-    ['label' => 'Здоровье', 'value' => $healthChange],
-    ['label' => 'Духовность', 'value' => $spiritualChange],
-    ['label' => 'Интеллект', 'value' => $intellectualChange],
-    ['label' => 'Опыт', 'value' => $expChange],
-];
+    $_SESSION['action_feedback'] = [
+        ['label' => 'Духовность', 'value' => $spiritualChange],
+        ['label' => 'Интеллект', 'value' => $intellectualChange],
+        ['label' => 'Опыт', 'value' => $expChange],
+    ];
 
 } catch (Throwable $e) {
-    $db->rollBack();
-    throw $e; //Если любая ошибка откатываем все изменения, как будто ничего не было.
+    mysqli_rollback($conn);
+    echo "Ошибка: " . $e->getMessage();
+    exit;
 }
 
 header('Location: /index.php');

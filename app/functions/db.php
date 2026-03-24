@@ -5,14 +5,10 @@ $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
 
-$dsn = "mysql:host=$host;dbname=$dbName;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
+$conn = mysqli_connect($host, $user, $pass, $dbName);
 
-try {
-    $db = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    die("Ошибка подключения к БД: " . $e->getMessage());
+if (!$conn) {
+    die("Ошибка подключения к БД: " . mysqli_connect_error());
 }
+
+mysqli_set_charset($conn, $charset);

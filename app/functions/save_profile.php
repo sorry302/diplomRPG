@@ -14,8 +14,10 @@ require_once __DIR__ . '/db.php';
 // Подключение StatsInitializer
 require_once __DIR__ . '/../services/StatsInitializer.php';
 
+$userId = (int)$userId;
+
 // Получаем данные из формы
-$age = (int)($_POST['age'] ?? 0);
+$age    = (int)($_POST['age'] ?? 0);
 $weight = (float)($_POST['weight'] ?? 0);
 $height = (float)($_POST['height'] ?? 0);
 
@@ -30,44 +32,42 @@ $profile = [
     'height' => $height,
 ];
 
+// Считаем BMI
+$bmi = round($weight / (($height / 100) ** 2), 2);
+
+mysqli_begin_transaction($conn);
+
 try {
-    $db->beginTransaction();
 
     // Вставка/обновление профиля
-    $stmt = $db->prepare("
+    mysqli_query($conn, "
         INSERT INTO user_profile (user_id, age, weight, height, bmi)
-        VALUES (:user_id, :age, :weight, :height, :bmi)
+        VALUES ($userId, $age, $weight, $height, $bmi)
         ON DUPLICATE KEY UPDATE
-            age = :age,
-            weight = :weight,
-            height = :height,
-            bmi = :bmi
+            age = $age,
+            weight = $weight,
+            height = $height,
+            bmi = $bmi
     ");
-    $bmi = round($weight / (($height / 100) ** 2), 2);
-    $stmt->execute([
-        ':user_id' => $userId,
-        ':age' => $age,
-        ':weight' => $weight,
-        ':height' => $height,
-        ':bmi' => $bmi
-    ]);
 
-    // Инициализация статов
-    $initializer = new StatsInitializer($db);
+    // Инициализация статов (ВАЖНО: меняем $db → $conn)
+    $initializer = new StatsInitializer($conn);
     $initializer->init($userId, $profile);
 
     // Обновление роли
-    $stmt = $db->prepare("UPDATE users SET role = 2 WHERE id = ?");
-    $stmt->execute([$userId]);
+    mysqli_query($conn, "
+        UPDATE users SET role = 2 WHERE id = $userId
+    ");
+
     $_SESSION['user']['role_id'] = 2;
 
-    $db->commit();
+    mysqli_commit($conn);
 
     header('Location: /index.php');
     exit;
 
 } catch (Throwable $e) {
-    $db->rollBack();
+    mysqli_rollback($conn);
     echo 'Ошибка: ' . $e->getMessage();
     exit;
 }

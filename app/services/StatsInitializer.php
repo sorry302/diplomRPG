@@ -2,15 +2,17 @@
 
 class StatsInitializer
 {
-    private PDO $db;
+    private $conn;
 
-    public function __construct(PDO $db)
+    public function __construct($conn)
     {
-        $this->db = $db;
+        $this->conn = $conn;
     }
 
     public function init(int $userId, array $profile): void
     {
+        $userId = (int)$userId;
+
         if ($this->hasStats($userId)) {
             return;
         }
@@ -25,17 +27,26 @@ class StatsInitializer
 
     private function hasStats(int $userId): bool
     {
-        $stmt = $this->db->prepare(
-            "SELECT 1 FROM user_stats WHERE user_id = ? LIMIT 1"
-        );
-        $stmt->execute([$userId]);
-        return (bool) $stmt->fetchColumn();
+        $userId = (int)$userId;
+
+        $result = mysqli_query($this->conn, "
+            SELECT 1 FROM user_stats WHERE user_id = $userId LIMIT 1
+        ");
+
+        return ($result && mysqli_fetch_assoc($result)) ? true : false;
     }
 
     private function getAllStats(): array
     {
-        $stmt = $this->db->query("SELECT code FROM stats");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = mysqli_query($this->conn, "SELECT code FROM stats");
+
+        $stats = [];
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $stats[] = $row;
+        }
+
+        return $stats;
     }
 
     private function calculateStat(string $code, array $profile): int
@@ -53,15 +64,15 @@ class StatsInitializer
 
     private function insertUserStat(int $userId, string $statCode, int $value): void
     {
-        $stmt = $this->db->prepare(
-            "INSERT INTO user_stats (user_id, stat_code, value)
-             VALUES (:user_id, :stat_code, :value)"
-        );
-        $stmt->execute([
-            ':user_id'   => $userId,
-            ':stat_code'=> $statCode,
-            ':value'    => max(0, min(100, $value)) // защита диапазона
-        ]);
+        $userId = (int)$userId;
+        $value  = max(0, min(100, (int)$value));
+
+        $statCode = mysqli_real_escape_string($this->conn, $statCode);
+
+        mysqli_query($this->conn, "
+            INSERT INTO user_stats (user_id, stat_code, value)
+            VALUES ($userId, '$statCode', $value)
+        ");
     }
 
     /* ===== ФОРМУЛЫ ===== */

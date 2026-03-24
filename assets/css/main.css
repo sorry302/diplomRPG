@@ -195,12 +195,47 @@ header {
 /* ===== LAYOUT ===== */
 main {
   padding: 16px;
+  display: grid;
   max-width: 520px;
   margin: 0 auto;
 }
 
+/* ЛЕВАЯ КОЛОНКА */
+.left-top {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+/* (на будущее если добавишь) */
+.left-middle {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.left-bottom {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+/* ПРАВАЯ */
+.right-top {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.right-middle {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.right-bottom {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+
 /* ===== RPG PANELS ===== */
-.panel,
+/* .panel,
 form {
   background: linear-gradient(
     180deg,
@@ -215,10 +250,10 @@ form {
   box-shadow:
     inset 0 0 0 1px rgba(255,255,255,0.04),
     0 10px 25px rgba(0,0,0,0.7);
-}
+} */
 
 /* ===== FORMS ===== */
-form {
+/* form {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -226,7 +261,7 @@ form {
 
 select,
 input[type="number"] {
-  background: #0b0e14;
+  background: #151821;
   border: 1px solid rgba(255,255,255,0.06);
   color: #e5e7eb;
 
@@ -240,7 +275,7 @@ input:focus {
   outline: none;
   border-color: #22c55e;
   box-shadow: 0 0 0 2px rgba(34,197,94,0.15);
-}
+} */
 
 /* ===== BUTTONS ===== */
 button {

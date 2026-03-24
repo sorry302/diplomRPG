@@ -12,20 +12,19 @@ if (!$userId) {
     exit;
 }
 
+$userId = (int)$userId;
 $activityId = (int)($_POST['activity_id'] ?? 0);
 $quantity   = max(1, (int)($_POST['quantity'] ?? 1));
 
 /* ===== Получаем активность ===== */
 
-$stmt = $db->prepare("
+$result = mysqli_query($conn, "
     SELECT *
     FROM activities
-    WHERE id = ? AND category = 'physical'
+    WHERE id = $activityId AND category = 'physical'
 ");
 
-$stmt->execute([$activityId]);
-
-$activity = $stmt->fetch(PDO::FETCH_ASSOC);
+$activity = mysqli_fetch_assoc($result);
 
 if (!$activity) {
     header('Location: /index.php');
@@ -39,51 +38,48 @@ $physicalChange = $activity['physical_change'] * $quantity;
 $fatChange      = $activity['obesity_change'] * $quantity;
 $expChange      = $activity['exp_change'] * $quantity;
 
-try {
+mysqli_begin_transaction($conn);
 
-    $db->beginTransaction();
+try {
 
     /* ===== XP ===== */
 
-    $expService = new ExperienceService($db);
+    $expService = new ExperienceService($conn);
     $expService->addExp($userId, $expChange);
 
     /* ===== Лог активности ===== */
 
-    $stmt = $db->prepare("
+    mysqli_query($conn, "
         INSERT INTO activity_logs (user_id, activity_id, quantity)
-        VALUES (?, ?, ?)
+        VALUES ($userId, $activityId, $quantity)
     ");
-
-    $stmt->execute([$userId, $activityId, $quantity]);
 
     /* ===== Обновление статов ===== */
 
-    function updateStat(PDO $db, int $userId, string $code, int $change)
+    function updateStat($conn, int $userId, string $code, int $change)
     {
         if ($change == 0) return;
 
-        $stmt = $db->prepare("
+        $code = mysqli_real_escape_string($conn, $code);
+
+        mysqli_query($conn, "
             INSERT INTO user_stats (user_id, stat_code, value)
-            VALUES (?, ?, ?)
+            VALUES ($userId, '$code', $change)
             ON DUPLICATE KEY UPDATE
             value = LEAST(100, GREATEST(0, value + VALUES(value)))
         ");
-
-        $stmt->execute([$userId, $code, $change]);
     }
 
-    updateStat($db, $userId, 'health', $healthChange);
-    updateStat($db, $userId, 'physical', $physicalChange);
-    updateStat($db, $userId, 'fat', $fatChange);
+    updateStat($conn, $userId, 'health', $healthChange);
+    updateStat($conn, $userId, 'physical', $physicalChange);
+    updateStat($conn, $userId, 'fat', $fatChange);
 
-    $db->commit();
+    mysqli_commit($conn);
 
+    /* ===== Достижения ===== */
 
-    $achievement = new AchievementService($db, $userId);
-$achievement->checkAll();
-
-
+    $achievement = new AchievementService($conn, $userId);
+    $achievement->checkAll();
 
     /* ===== Feedback ===== */
 
@@ -100,6 +96,6 @@ $achievement->checkAll();
 }
 catch (Throwable $e)
 {
-    $db->rollBack();
+    mysqli_rollback($conn);
     echo $e->getMessage();
 }

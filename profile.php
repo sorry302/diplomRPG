@@ -8,42 +8,40 @@ unset($_SESSION['action_feedback']);
 
 
 /* ===== ПОЛЬЗОВАТЕЛЬ ===== */
-$stmt = $db->prepare("
+$query = "
     SELECT u.username, u.created_at,
            e.level, e.exp
     FROM users u
     LEFT JOIN experience e ON e.user_id = u.id
-    WHERE u.id = ?
-");
-$stmt->execute([$userId]);
-$user = $stmt->fetch();
+    WHERE u.id = $userId
+";
+$user = $conn->query($query)->fetch_assoc();
 
 /* ===== СТАТЫ ===== */
-$stmt = $db->prepare("
+$query = "
     SELECT stat_code, value
     FROM user_stats
-    WHERE user_id = ?
-");
-$stmt->execute([$userId]);
+    WHERE user_id = $userId
+";
+$result = $conn->query($query);
 
 $stats = [];
-foreach ($stmt->fetchAll() as $row) {
+while ($row = $result->fetch_assoc()) {
     $stats[$row['stat_code']] = $row['value'];
 }
 
 /* ===== Достижение ===== */
-$stmt = $db->prepare("
+$query = "
     SELECT a.title, a.description, a.icon, ua.achieved_at
     FROM user_achievements ua
     JOIN achievements a ON a.id = ua.achievement_id
-    WHERE ua.user_id = ?
+    WHERE ua.user_id = $userId
     ORDER BY ua.achieved_at DESC
-");
-$stmt->execute([$userId]);
-$achievements = $stmt->fetchAll();
+";
+$achievements = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
 
 /* ===== АКТИВНОСТЬ ===== */
-$stmt = $db->prepare("
+$query = "
     (
         SELECT 
             'food' AS type,
@@ -52,7 +50,7 @@ $stmt = $db->prepare("
             fl.created_at
         FROM food_logs fl
         JOIN foods f ON f.id = fl.food_id
-        WHERE fl.user_id = ?
+        WHERE fl.user_id = $userId
     )
     UNION ALL
     (
@@ -63,16 +61,15 @@ $stmt = $db->prepare("
             al.created_at
         FROM activity_logs al
         JOIN activities a ON a.id = al.activity_id
-        WHERE al.user_id = ?
+        WHERE al.user_id = $userId
     )
     ORDER BY created_at DESC
     LIMIT 10
-");
-$stmt->execute([$userId, $userId]);
-$activities = $stmt->fetchAll(PDO::FETCH_ASSOC);
+";
+$activities = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
 
 
-$stmt = $db->prepare("
+$query = "
     SELECT 
         u.username,
         u.created_at,
@@ -82,18 +79,16 @@ $stmt = $db->prepare("
     FROM users u
     LEFT JOIN experience e ON e.user_id = u.id
     LEFT JOIN user_profile up ON up.user_id = u.id
-    WHERE u.id = ?
-");
-$stmt->execute([$userId]);
-$userAva = $stmt->fetch(PDO::FETCH_ASSOC);
+    WHERE u.id = $userId
+";
+$userAva = $conn->query($query)->fetch_assoc();
 
 
 /* ===== XP ПРОГРЕСС ===== */
-$stmt = $db->prepare("SELECT required_exp FROM levels WHERE level = ?");
-$stmt->execute([$user['level'] + 1]);
-$nextLevelExp = $stmt->fetchColumn();
-
-if (!$nextLevelExp) {
+$nextLevel = $user['level'] + 1;
+$query = "SELECT required_exp FROM levels WHERE level = $nextLevel";
+$res = $conn->query($query);
+$nextLevelExp = $res->fetch_row()[0] ?? null;if (!$nextLevelExp) {
     $xpPercent = 100; // максимальный уровень
     $nextLevelExp = $user['exp'];
 } else {
@@ -104,7 +99,8 @@ if (!$nextLevelExp) {
 <main class="profile">
 
 <!-- ===== ОСНОВНОЕ ===== -->
-<section class="card profile-main">
+ <section class="card left-top">
+
 <?php
 $avatarFile = $userAva['avatar'] ?? 'default.png';
 
@@ -135,7 +131,7 @@ $avatarUrl = '/uploads/avatars/' . basename($avatarFile);
 </section>
 
 <!-- ===== ХАРАКТЕРИСТИКИ ===== -->
-<section class="card">
+<section class="card profile-main right-top">
     <h3>Характеристики</h3>
 
     <?php
@@ -161,7 +157,7 @@ $avatarUrl = '/uploads/avatars/' . basename($avatarFile);
     <?php endforeach; ?>
 </section>
 
-<section class="card">
+<section class="card profile-main">
     <h3>Достижения</h3>
 
     <?php if (!$achievements): ?>
@@ -183,7 +179,7 @@ $avatarUrl = '/uploads/avatars/' . basename($avatarFile);
 
 
 <!-- ===== АКТИВНОСТЬ ===== -->
-<section class="card">
+<section class="card .right-middle">
     <h3>Последние действия</h3>
 
     <?php if (!$activities): ?>

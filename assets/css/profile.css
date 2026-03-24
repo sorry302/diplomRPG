@@ -5,31 +5,75 @@ body {
 }
 
 .profile {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 40px auto;
+
     display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: auto auto auto;
     gap: 20px;
+}
+
+/* ЛЕВАЯ КОЛОНКА */
+.left-top {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+/* (на будущее если добавишь) */
+.left-middle {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.left-bottom {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+/* ПРАВАЯ */
+.right-top {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.right-middle {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.right-bottom {
+    grid-column: 2;
+    grid-row: 3;
 }
 
 .card {
     background: #15151c;
     padding: 20px;
-    border-radius: 14px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3vh;
     box-shadow: 0 0 0 1px #222;
+    flex-direction: column;
+    grid-column: span;
 }
 
 .profile-main {
     display: flex;
     gap: 20px;
     align-items: center;
+    flex-direction: column;
 }
 .profile-main a{
     color: white;
     text-decoration: none;
 }
 .avatar {
-    width: 96px;
-    height: 96px;
+    width: 200px;
+    height: 200px;
+    align-items: center;
+    padding-left: 12px;
     border-radius: 50%;
     border: 2px solid #333;
 }
@@ -48,6 +92,7 @@ body {
 }
 
 .stat {
+    width: 100%;
     margin-bottom: 10px;
 }
 
@@ -80,4 +125,9 @@ body {
 
 .muted {
     color: #777;
+}
+
+.btn-edit{
+    text-decoration: none;
+    color: white;
 }
