@@ -1,30 +1,26 @@
 <?php
 session_start();
 require '../functions/db.php';
-$stmt = $db->prepare("
+$db->query("
 INSERT INTO achievements (code,title,description,icon)
-VALUES (?,?,?,?)
+VALUES (
+    '{$_POST['code']}',
+    '{$_POST['title']}',
+    '{$_POST['description']}',
+    '{$_POST['icon']}'
+)
 ");
-$stmt->execute([
-$_POST['code'],
-$_POST['title'],
-$_POST['description'],
-$_POST['icon']
-]);
 
-$achievementId = $db->lastInsertId();
+$achievementId = $conn->insert_id;
 
-$stmt = $db->prepare("
+$conn->query("
 INSERT INTO achievement_conditions
 (achievement_id, condition_type, condition_value)
-VALUES (?,?,?)
+VALUES (
+    $achievementId,
+    '{$_POST['condition_type']}',
+    '{$_POST['condition_value']}'
+)
 ");
-
-$stmt->execute([
-$achievementId,
-$_POST['condition_type'],
-$_POST['condition_value']
-]);
-
 header("Location: achievements.php");
 ?>

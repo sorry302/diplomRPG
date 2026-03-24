@@ -9,6 +9,7 @@ if (!isset($_SESSION['user'])) {
 // role = 3 → администратор
 if ((int)$_SESSION['user']['role_id'] !== 3) {
     http_response_code(403);
+    header('Location: /index.php');
     die('Доступ запрещён');
 }
 
