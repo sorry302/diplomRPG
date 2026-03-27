@@ -152,6 +152,30 @@ $spiritual = $stats['spiritual'] ?? 0;
       <button type="submit">Выполнить</button>
     </form>
 
+    <!-- ===== Плохие привычки ===== -->
+    <form action="/app/functions/bad_hobby.php" method="post" class="action-card">
+
+      <div class="action-header">
+        <span class="action-icon">🚬</span>
+        <span class="action-title">Плохие привычки</span>
+      </div>
+
+      <select name="activity_id" required>
+        <?php
+        $result = mysqli_query($conn, "
+          SELECT * FROM activities WHERE category = 'bad_habit'
+        ");
+
+        while ($a = mysqli_fetch_assoc($result)) {
+          echo "<option value='{$a['id']}'>{$a['name']}</option>";
+        }
+        ?>
+      </select>
+
+      <input type="number" name="quantity" min="1" value="1">
+      <button type="submit">Выполнить</button>
+    </form>
+
   </section>
 
 
