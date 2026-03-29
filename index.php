@@ -23,6 +23,116 @@ $spiritual = $stats['spiritual'] ?? 0;
 
 <main>
 
+<div class="actions-floating">
+
+  <!-- 🍽 -->
+  <div class="action-wrapper">
+    <div class="action-btn">🍽</div>
+
+    <form action="/app/functions/eat_food.php" method="post" class="action-card">
+      <div class="action-title">Приём пищи</div>
+
+      <select name="food_id" required>
+        <?php
+        $foodsResult = mysqli_query($conn, "SELECT * FROM foods");
+        while ($food = mysqli_fetch_assoc($foodsResult)) {
+          echo "<option value='{$food['id']}'>{$food['name']} ({$food['calories']} ккал)</option>";
+        }
+        ?>
+      </select>
+
+      <input type="number" name="portions" min="1" value="1">
+      <button type="submit">Поесть</button>
+    </form>
+  </div>
+
+  <!-- 🏃 -->
+  <div class="action-wrapper">
+    <div class="action-btn">🏃</div>
+
+    <form action="/app/functions/physical_activity.php" method="post" class="action-card">
+      <div class="action-title">Физическая</div>
+
+      <select name="activity_id" required>
+        <?php
+        $result = mysqli_query($conn, "SELECT * FROM activities WHERE category='physical'");
+        while ($a = mysqli_fetch_assoc($result)) {
+          echo "<option value='{$a['id']}'>{$a['name']}</option>";
+        }
+        ?>
+      </select>
+
+      <input type="number" name="quantity" min="1" value="1">
+      <button type="submit">Выполнить</button>
+    </form>
+  </div>
+
+  <!-- 🧬 -->
+  <div class="action-wrapper">
+    <div class="action-btn">🧬</div>
+
+    <form action="/app/functions/intellectual_activity.php" method="post" class="action-card">
+      <div class="action-title">Интеллект</div>
+
+      <select name="activity_id" required>
+        <?php
+        $result = mysqli_query($conn, "SELECT * FROM activities WHERE category='intellectual'");
+        while ($a = mysqli_fetch_assoc($result)) {
+          echo "<option value='{$a['id']}'>{$a['name']}</option>";
+        }
+        ?>
+      </select>
+
+      <input type="number" name="quantity" min="1" value="1">
+      <button type="submit">Выполнить</button>
+    </form>
+  </div>
+
+  <!-- 🧘 -->
+  <div class="action-wrapper">
+    <div class="action-btn">🧘‍♂️</div>
+
+    <form action="/app/functions/spiritual_activity.php" method="post" class="action-card">
+      <div class="action-title">Духовность</div>
+
+      <select name="activity_id" required>
+        <?php
+        $result = mysqli_query($conn, "SELECT * FROM activities WHERE category='spiritual'");
+        while ($a = mysqli_fetch_assoc($result)) {
+          echo "<option value='{$a['id']}'>{$a['name']}</option>";
+        }
+        ?>
+      </select>
+
+      <input type="number" name="quantity" min="1" value="1">
+      <button type="submit">Выполнить</button>
+    </form>
+  </div>
+
+  <!-- 🚬 НОВОЕ -->
+  <div class="action-wrapper">
+    <div class="action-btn">🚬</div>
+
+    <form action="/app/functions/bad_hobby.php" method="post" class="action-card">
+      <div class="action-title">Плохие привычки</div>
+
+      <select name="activity_id" required>
+        <?php
+        $result = mysqli_query($conn, "SELECT * FROM activities WHERE category='bad_habit'");
+        while ($a = mysqli_fetch_assoc($result)) {
+          echo "<option value='{$a['id']}'>{$a['name']}</option>";
+        }
+        ?>
+      </select>
+
+      <input type="number" name="quantity" min="1" value="1">
+      <button type="submit">Выполнить</button>
+    </form>
+  </div>
+
+</div>
+
+
   <!-- ===== ПАНЕЛЬ ПЕРСОНАЖА ===== -->
   <section class="panel character-panel">
     <h4 class="panel-title">Характеристики</h4>
@@ -47,136 +157,12 @@ $spiritual = $stats['spiritual'] ?? 0;
     renderStat('Физическая', $physical, 'energy');
     renderStat('Духовность', $spiritual, 'spiritual');
     ?>
-  </section>
 
 
-  <!-- ===== ДЕЙСТВИЯ ===== -->
-  <section class="panel actions-panel">
-    <h4 class="panel-title">Действия</h4>
-
-    <!-- ===== ЕДА ===== -->
-    <form action="/app/functions/eat_food.php" method="post" class="action-card">
-      <div class="action-header">
-        <span class="action-icon">🍽</span>
-        <span class="action-title">Приём пищи</span>
-      </div>
-
-      <select name="food_id" required>
-        <?php
-        $foodsResult = mysqli_query($conn, "SELECT * FROM foods");
-
-        while ($food = mysqli_fetch_assoc($foodsResult)) {
-          echo "<option value='{$food['id']}'>
-            {$food['name']} ({$food['calories']} ккал)
-          </option>";
-        }
-        ?>
-      </select>
-
-      <input type="number" name="portions" min="1" value="1">
-      <button type="submit">Поесть</button>
-    </form>
-
-
-    <!-- ===== ФИЗИЧЕСКИЕ ===== -->
-    <form action="/app/functions/physical_activity.php" method="post" class="action-card">
-
-      <div class="action-header">
-        <span class="action-icon">🏃</span>
-        <span class="action-title">Физическая активность</span>
-      </div>
-
-      <select name="activity_id" required>
-        <?php
-        $result = mysqli_query($conn, "
-          SELECT * FROM activities WHERE category = 'physical'
-        ");
-
-        while ($a = mysqli_fetch_assoc($result)) {
-          echo "<option value='{$a['id']}'>{$a['name']}</option>";
-        }
-        ?>
-      </select>
-
-      <input type="number" name="quantity" min="1" value="1">
-      <button type="submit">Выполнить</button>
-    </form>
-
-
-    <!-- ===== ИНТЕЛЛЕКТ ===== -->
-    <form action="/app/functions/intellectual_activity.php" method="post" class="action-card">
-
-      <div class="action-header">
-        <span class="action-icon">🧬</span>
-        <span class="action-title">Интеллект</span>
-      </div>
-
-      <select name="activity_id" required>
-        <?php
-        $result = mysqli_query($conn, "
-          SELECT * FROM activities WHERE category = 'intellectual'
-        ");
-
-        while ($a = mysqli_fetch_assoc($result)) {
-          echo "<option value='{$a['id']}'>{$a['name']}</option>";
-        }
-        ?>
-      </select>
-
-      <input type="number" name="quantity" min="1" value="1">
-      <button type="submit">Выполнить</button>
-    </form>
-
-
-    <!-- ===== ДУХОВНОСТЬ ===== -->
-    <form action="/app/functions/spiritual_activity.php" method="post" class="action-card">
-
-      <div class="action-header">
-        <span class="action-icon">🧘‍♂️</span>
-        <span class="action-title">Духовность</span>
-      </div>
-
-      <select name="activity_id" required>
-        <?php
-        $result = mysqli_query($conn, "
-          SELECT * FROM activities WHERE category = 'spiritual'
-        ");
-
-        while ($a = mysqli_fetch_assoc($result)) {
-          echo "<option value='{$a['id']}'>{$a['name']}</option>";
-        }
-        ?>
-      </select>
-
-      <input type="number" name="quantity" min="1" value="1">
-      <button type="submit">Выполнить</button>
-    </form>
-
-    <!-- ===== Плохие привычки ===== -->
-    <form action="/app/functions/bad_hobby.php" method="post" class="action-card">
-
-      <div class="action-header">
-        <span class="action-icon">🚬</span>
-        <span class="action-title">Плохие привычки</span>
-      </div>
-
-      <select name="activity_id" required>
-        <?php
-        $result = mysqli_query($conn, "
-          SELECT * FROM activities WHERE category = 'bad_habit'
-        ");
-
-        while ($a = mysqli_fetch_assoc($result)) {
-          echo "<option value='{$a['id']}'>{$a['name']}</option>";
-        }
-        ?>
-      </select>
-
-      <input type="number" name="quantity" min="1" value="1">
-      <button type="submit">Выполнить</button>
-    </form>
 
   </section>
+
+
 
 
   <!-- ===== МОДАЛКА ===== -->
@@ -212,7 +198,7 @@ $spiritual = $stats['spiritual'] ?? 0;
   <script src="/assets/js/modal.js" defer></script>
   <script src="/assets/js/effectavto.js" defer></script>
   <script src="/assets/js/effectras.js" defer></script>
-
+  <script src="/assets/js/main.js" defer></script>
 
 </body>
 </html>
