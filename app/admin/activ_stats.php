@@ -9,6 +9,117 @@ require_once __DIR__ . '/../functions/db.php';
 require_once __DIR__ . '/../components/header.php';
 ?>
 
+<style>
+    .admin-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .panel {
+        background: rgba(30, 30, 35, 0.9);
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    /* Стили формы */
+    .add-activity-form {
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+        gap: 15px; 
+        margin-top: 15px;
+    }
+
+    .add-activity-form input, .add-activity-form select {
+        background: #2a2a2e;
+        border: 1px solid #555;
+        color: #fff;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .btn-add {
+        background: var(--accent-positive, #28a745);
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        grid-column: 1 / -1;
+    }
+
+    .btn-add:hover {
+        filter: brightness(1.2);
+    }
+
+    /* Стили таблицы */
+    .table-responsive {
+        overflow-x: auto;
+        margin-top: 10px;
+    }
+
+    .rpg-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e0e0e0;
+        font-size: 14px;
+    }
+
+    .rpg-table th {
+        background: rgba(0, 0, 0, 0.3);
+        text-align: left;
+        padding: 12px 10px;
+        border-bottom: 2px solid #444;
+        color: var(--accent-gold, #ffd700);
+        text-transform: uppercase;
+        font-size: 12px;
+    }
+
+    .rpg-table td {
+        padding: 10px;
+        border-bottom: 1px solid #333;
+        vertical-align: middle;
+    }
+
+    .rpg-table tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Цвета для статов */
+    .pos { color: #28a745; font-weight: bold; }
+    .neg { color: #dc3545; font-weight: bold; }
+
+    .actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-edit, .btn-delete {
+        text-decoration: none;
+        padding: 5px;
+        transition: transform 0.2s;
+        display: inline-block;
+    }
+
+    .btn-edit:hover, .btn-delete:hover {
+        transform: scale(1.3);
+    }
+
+    summary {
+        padding: 10px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+
+    summary:hover {
+        background: rgba(255,255,255,0.1);
+    }
+</style>
+
 <main class="admin-container">
     <div class="panel">
 
@@ -17,15 +128,14 @@ require_once __DIR__ . '/../components/header.php';
         </h3>
 
         <!-- ===== ДОБАВЛЕНИЕ ===== -->
-        <details style="margin-bottom: 20px; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px;">
-            <summary style="cursor: pointer; font-weight: bold; color: var(--accent-positive);">
+        <details style="margin-bottom: 30px; background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px;">
+            <summary style="cursor: pointer; font-weight: bold; color: var(--accent-positive, #28a745);">
                 + Добавить новую активность
             </summary>
 
-            <form method="POST" action="save_activity.php"
-                  style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+            <form method="POST" action="save_activity.php" class="add-activity-form">    
 
-                <input name="name" placeholder="Название (например: Бег)" required>
+                <input name="name" placeholder="Название (например: Бег)" required>    
 
                 <select name="category">
                     <option value="physical">Физическая</option>
@@ -38,10 +148,10 @@ require_once __DIR__ . '/../components/header.php';
                 <input type="number" name="physical_change" placeholder="💪 Физ. форма (+/-)" required>
                 <input type="number" name="intellectual_change" placeholder="🧠 Интеллект (+/-)" required>
                 <input type="number" name="spiritual_change" placeholder="🧘 Духовность (+/-)" required>
-                <input type="number" name="obesity_change" placeholder="🍔 Жир (+/-)" required>
+                <input type="number" name="obesity_change" placeholder="🍔 Жир (+/-)" required>      
                 <input type="number" name="exp_change" placeholder="🔥 Опыт (+)" required>
 
-                <button type="submit" class="btn-add">Сохранить активность</button>
+                <button type="submit" class="btn-add">Сохранить активность</button>    
             </form>
         </details>
 

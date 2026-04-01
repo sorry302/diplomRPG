@@ -9,8 +9,114 @@ require_once __DIR__ . '/../functions/db.php';
 require_once __DIR__ . '/../components/header.php';
 ?>
 
-<main class="admin-container">
-    <div class="panel">
+<style>
+    .admin-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .panel {
+        background: rgba(30, 30, 35, 0.9);
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .filter-btn {
+        padding: 8px 16px;
+        background: #2a2a2e;
+        border: 1px solid #555;
+        color: #ccc;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: all 0.3s;
+        font-size: 14px;
+    }
+
+    .filter-btn:hover {
+        border-color: var(--accent-gold, #ffd700);
+        color: #fff;
+    }
+
+    .filter-btn.active {
+        background: var(--accent-gold, #ffd700);
+        color: #000;
+        border-color: var(--accent-gold, #ffd700);
+        font-weight: bold;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        margin-top: 10px;
+    }
+
+    .rpg-table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e0e0e0;
+        font-size: 15px;
+    }
+
+    .rpg-table th {
+        background: rgba(0, 0, 0, 0.3);
+        text-align: left;
+        padding: 12px 15px;
+        border-bottom: 2px solid #444;
+        color: var(--accent-gold, #ffd700);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 13px;
+    }
+
+    .rpg-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #333;
+        vertical-align: middle;
+    }
+
+    .rpg-table tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .role-admin { background: #721c24; color: #f8d7da; border: 1px solid #f5c6cb; }
+    .role-user { background: #155724; color: #d4edda; border: 1px solid #c3e6cb; }
+    .role-newbie { background: #0c5460; color: #d1ecf1; border: 1px solid #bee5eb; }
+
+    .level-badge {
+        background: #333;
+        padding: 3px 7px;
+        border-radius: 10px;
+        border: 1px solid var(--accent-gold, #ffd700);
+        color: var(--accent-gold, #ffd700);
+    }
+
+    .actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-edit, .btn-delete {
+        text-decoration: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        transition: transform 0.2s;
+    }
+
+    .btn-edit:hover, .btn-delete:hover {
+        transform: scale(1.2);
+    }
+</style>
+
+<main class="admin-container">    <div class="panel">
 
         <h3 style="margin-top: 0; color: var(--accent-gold);">
             👥 Управление пользователями
