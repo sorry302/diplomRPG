@@ -21,7 +21,16 @@ $spiritual = $stats['spiritual'] ?? 0;
 <link rel="stylesheet" href="assets/css/stat.css">
 <link rel="stylesheet" href="assets/css/modal.css">
 
-<main>
+
+<div class="main-layout">
+
+<aside class="left-panel">
+        <div class="post">
+          <p>🔥 Ты сделал 3 активности сегодня!</p>
+        </div>
+    </aside>
+
+<main class="center-panel">
 
 <div class="actions-floating">
 
@@ -184,6 +193,34 @@ $spiritual = $stats['spiritual'] ?? 0;
 
 </main>
 
+<aside class="right-panel">
+        <div class="notification unread">
+          <p>🏆 Новое достижение!</p>
+        </div>
+    </aside>
+
+</div>
+
+<!-- КНОПКИ (видны только на мобиле) -->
+<div class="mobile-buttons">
+    <button id="openPosts">📜</button>
+    <button id="openNotifications">🔔</button>
+</div>
+
+<!-- ЛЕВАЯ ПАНЕЛЬ -->
+<div class="drawer left-drawer" id="postsDrawer">
+    <button class="close-btn">✖</button>
+    <h3>Посты</h3>
+</div>
+
+<!-- ПРАВАЯ ПАНЕЛЬ -->
+<div class="drawer right-drawer" id="notificationsDrawer">
+    <button class="close-btn">✖</button>
+    <h3>Уведомления</h3>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay"></div>
 
 <?php if ($actionFeedback): ?>
 <script>
@@ -193,12 +230,11 @@ $spiritual = $stats['spiritual'] ?? 0;
 
 
 
-  <?php require 'app/components/bottom_nav.php'; ?>
-
   <script src="/assets/js/modal.js" defer></script>
   <script src="/assets/js/effectavto.js" defer></script>
   <script src="/assets/js/effectras.js" defer></script>
   <script src="/assets/js/main.js" defer></script>
+  <script src="/assets/js/draivpostyved.js" defer></script>
 
 </body>
 </html>
