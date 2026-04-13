@@ -25,10 +25,11 @@ html, body {
   color: #e5e7eb;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.4;
+  overflow-x: hidden;
 }
 
-body {
-  padding-bottom: 70px; /* место для нижней навигации */
+.main-layout {
+    padding-bottom: 80px;
 }
 
 /* ===== HEADER ===== */
@@ -39,7 +40,7 @@ header {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px 14px 10px;
+  padding: 12px 10px;
   background: linear-gradient(180deg, rgba(18,22,32,0.96), rgba(13,15,23,0.96));
   border-bottom: 1px solid var(--border-soft);
   backdrop-filter: blur(4px);
@@ -69,14 +70,16 @@ header {
 /* ===== НАВИГАЦИЯ В ШАПКЕ ===== */
 .nav {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 8px;
+  width: 100%;
 }
 
 .nav a {
   flex: 1;
   text-align: center;
   text-decoration: none;
+  min-width: 0;
   font-size: 13px;
   font-weight: 500;
   color: #cbd5f5;
@@ -124,7 +127,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: calc(100vh - 70px);
+  min-height: 100vh;
 }
 
 .main-layout {
@@ -580,6 +583,7 @@ button:active {
 }
 
 @media (max-width: 900px) {
+
     .main-layout {
         grid-template-columns: 1fr;
     }
@@ -650,10 +654,56 @@ button:active {
 }
 
 @media (max-width: 900px) {
-    .mobile-buttons {
-        display: flex;
-        justify-content: space-between;
+  header {
+        padding: 12px 10px;
+    }
+    .main-layout {
+        grid-template-columns: 1fr;
         padding: 10px;
+    }
+
+    .center-panel {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .mobile-buttons {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+
+        padding: 12px;
+
+        background: rgba(21, 24, 33, 0.95);
+        border-top: 1px solid var(--border-soft);
+
+        z-index: 9999; /* 👈 важно */
+    }
+
+    .mobile-buttons button {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border-soft);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: var(--text-main);
+    }
+
+    .mobile-buttons button:active {
+        transform: scale(0.9);
+        background: rgba(34,197,94,0.2);
+        border-color: var(--accent-positive);
     }
 
     .left-panel,

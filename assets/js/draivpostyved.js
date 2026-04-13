@@ -9,11 +9,13 @@ const overlay = document.getElementById('overlay');
 postsBtn.onclick = () => {
     postsDrawer.classList.add('active');
     overlay.classList.add('active');
+    notifDrawer.classList.remove('active');
 };
 
 notifBtn.onclick = () => {
     notifDrawer.classList.add('active');
     overlay.classList.add('active');
+    postsDrawer.classList.remove('active');
 };
 
 overlay.onclick = closeAll;
