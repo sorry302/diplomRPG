@@ -50,6 +50,14 @@ require_once __DIR__ . '/../components/header.php';
                 </div>
             </a>
 
+            <a href="user_list.php" class="admin-card">
+                <div class="card-icon">🖋️</div>
+                <div class="card-info">
+                    <h4>Посты</h4>
+                    <p>Отправка постов</p>
+                </div>
+            </a>
+
         </div>
 
     </div>

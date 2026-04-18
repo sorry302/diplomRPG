@@ -151,7 +151,7 @@ require_once __DIR__ . '/../components/header.php';
                 <input type="number" name="obesity_change" placeholder="🍔 Жир (+/-)" required>      
                 <input type="number" name="exp_change" placeholder="🔥 Опыт (+)" required>
 
-                <button type="submit" class="btn-add">Сохранить активность</button>    
+                <button type="submit" name="save_activ" class="btn-add">Сохранить активность</button>    
             </form>
         </details>
 
@@ -164,7 +164,7 @@ require_once __DIR__ . '/../components/header.php';
         ];
 
         foreach ($categories as $catKey => $catName):
-
+ //делаем безопасный запрос в стринг
             $catKeySafe = mysqli_real_escape_string($conn, $catKey);
 
             $result = mysqli_query($conn, "

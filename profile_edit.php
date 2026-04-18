@@ -7,19 +7,18 @@ require 'app/components/header.php';
 $userId = $_SESSION['user']['user_id'];
 
 /* ===== ДАННЫЕ ПОЛЬЗОВАТЕЛЯ ===== */
-$stmt = $db->prepare("
+$query = "
     SELECT 
         u.username,
         up.avatar
     FROM users u
     LEFT JOIN user_profile up ON up.user_id = u.id
-    WHERE u.id = ?
-");
-$stmt->execute([$userId]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+    WHERE u.id = $userId
+";
+$result = mysqli_query($conn, $query);
+$user = mysqli_fetch_assoc($result);
 
-$avatarFile = $user['avatar'] ?? 'default.png';
-?>
+$avatarFile = $user['avatar'] ?? 'default.png';?>
 
 <link rel="stylesheet" href="/assets/css/profile_edit.css">
 
@@ -46,12 +45,7 @@ $avatarFile = $user['avatar'] ?? 'default.png';
         <!-- НИКНЕЙМ -->
         <label>
             Никнейм
-            <input
-                type="text"
-                name="username"
-                value="<?= htmlspecialchars($user['username']) ?>"
-                required
-            >
+            <input type="text" name="username" value="<?= htmlspecialchars($user['username']) ?>" required>
         </label>
 
         <!-- ЗАГРУЗКА АВАТАРА -->

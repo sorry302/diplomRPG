@@ -159,7 +159,7 @@ require_once __DIR__ . '/../components/header.php';
                 <input type="number" name="health_change" placeholder="Здоровье (+/-)" required>  
                 <input type="number" name="obesity_change" placeholder="Жир (+/-)" required>
 
-                <button type="submit" class="btn-add">Сохранить продукт</button>
+                <button type="submit" name="save_food" class="btn-add">Сохранить продукт</button>
             </form>
         </details>
 
