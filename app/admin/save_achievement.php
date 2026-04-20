@@ -1,7 +1,7 @@
 <?php
 session_start();
 require '../functions/db.php';
-$db->query("
+$conn->query("
 INSERT INTO achievements (code,title,description,icon)
 VALUES (
     '{$_POST['code']}',

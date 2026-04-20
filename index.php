@@ -225,10 +225,30 @@ $currentType = $_GET['type'] ?? 'all';
 </main>
 
 <aside class="right-panel">
-        <div class="notification unread">
-          <p>🏆 Новое достижение!</p>
-        </div>
-    </aside>
+
+<?php
+
+
+$userId = $_SESSION['user']['user_id'] ?? 0;
+
+
+
+$result = mysqli_query($conn, "
+    SELECT * FROM notifications
+    WHERE user_id = $userId
+    ORDER BY created_at DESC
+    LIMIT 10
+");
+
+
+while ($n = mysqli_fetch_assoc($result)) {
+    echo "<div class='notification {$n['type']}'>
+            <p>{$n['message']}</p>
+          </div>";
+}
+?>
+
+</aside>
 
 </div>
 

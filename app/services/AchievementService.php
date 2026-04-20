@@ -124,25 +124,48 @@ class AchievementService
         return false;
     }
 
-    private function unlock(int $achievementId): void
-    {
-        $userId = $this->userId;
-        $achievementId = (int)$achievementId;
+ private function unlock(int $achievementId): void
+{
+    $userId = $this->userId;
+    $achievementId = (int)$achievementId;
 
-        $result = mysqli_query($this->conn, "
-            SELECT 1 
-            FROM user_achievements
-            WHERE user_id = $userId
-            AND achievement_id = $achievementId
-        ");
+    $result = mysqli_query($this->conn, "
+        SELECT 1 
+        FROM user_achievements
+        WHERE user_id = $userId
+        AND achievement_id = $achievementId
+    ");
 
-        if ($result && mysqli_fetch_assoc($result)) {
-            return;
-        }
-
-        mysqli_query($this->conn, "
-            INSERT INTO user_achievements (user_id, achievement_id)
-            VALUES ($userId, $achievementId)
-        ");
+    if ($result && mysqli_fetch_assoc($result)) {
+        return;
     }
+
+    // получаем инфу об ачивке
+    $ach = mysqli_query($this->conn, "
+        SELECT title, icon 
+        FROM achievements 
+        WHERE id = $achievementId
+    ");
+
+    $achievement = mysqli_fetch_assoc($ach);
+
+    mysqli_query($this->conn, "
+        INSERT INTO user_achievements (user_id, achievement_id)
+        VALUES ($userId, $achievementId)
+    ");
+
+    //вывод уведомления
+    $message = $achievement['icon'] . " Достижение получено: " . $achievement['title'];
+
+    $this->addNotification($message, 'achievement');
+}
+private function addNotification($message, $type = 'achievement')
+{
+    $userId = $this->userId;
+
+    mysqli_query($this->conn, "
+        INSERT INTO notifications (user_id, type, message)
+        VALUES ($userId, '$type', '$message')
+    ");
+}
 }
