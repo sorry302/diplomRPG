@@ -158,12 +158,100 @@ main {
     border-radius: 10px;
     background: rgba(255,255,255,0.05);
     transition: 0.3s;
+    cursor: pointer;
 }
 
 .post:hover, .notification:hover {
     transform: translateY(-3px);
     background: rgba(255,255,255,0.08);
 }
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    
+}
+
+/* стрелка */
+.arrow {
+    transition: transform 0.3s ease;
+    color: #ccc;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* поворот */
+.post.active .arrow {
+    transform: rotate(180deg);
+}
+
+/* контент */
+.post-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    color: #aaa;
+}
+
+.post.active .post-content {
+    max-height: 200px;
+    opacity: 1;
+    margin-top: 8px;
+}
+.post-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    color: #aaa;
+}
+
+.post.active .post-content {
+    max-height: 200px;
+    opacity: 1;
+    margin-top: 8px;
+}
+
+.menu_left {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+/* Кнопки */
+.menu_left a {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 20px;
+
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-soft);
+
+    text-decoration: none;
+    color: var(--text-muted);
+
+    transition: all 0.2s ease;
+}
+
+/* Hover */
+.menu_left a:hover {
+    background: rgba(34,197,94,0.15);
+    color: #fff;
+}
+
+/* Активная */
+.menu_left a.active {
+    background: rgba(34,197,94,0.25);
+    color: #fff;
+    border-color: rgba(34,197,94,0.5);
+}
+
 
 .notification.unread {
     border-left: 3px solid #4caf50;

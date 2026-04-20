@@ -16,6 +16,12 @@ $fat       = $stats['fat'] ?? 0;
 $intellect = $stats['intellect'] ?? 0;
 $physical  = $stats['physical'] ?? 0;
 $spiritual = $stats['spiritual'] ?? 0;
+
+if(isset($_GET['type'])){
+$post = $conn->query("SELECT * FROM `posts` WHERE `type` = '{$_GET['type']}'");
+}else{
+  $post = $conn->query("SELECT * FROM `posts`");
+}
 ?>
 
 <link rel="stylesheet" href="assets/css/stat.css">
@@ -25,9 +31,34 @@ $spiritual = $stats['spiritual'] ?? 0;
 <div class="main-layout">
 
 <aside class="left-panel">
-        <div class="post">
-          <p>🔥 Ты сделал 3 активности сегодня!</p>
-        </div>
+    <?php 
+$currentType = $_GET['type'] ?? 'all';
+?>
+
+<div class="menu_left">
+  <a href="index.php" class="<?= $currentType == 'all' ? 'active' : '' ?>">Все</a>
+  <a href="index.php?type=info" class="<?= $currentType == 'info' ? 'active' : '' ?>">Новости</a>
+  <a href="index.php?type=motivation" class="<?= $currentType == 'motivation' ? 'active' : '' ?>">Мотивация</a>
+  <a href="index.php?type=warning" class="<?= $currentType == 'warning' ? 'active' : '' ?>">Предупреждение</a>
+  <a href="index.php?type=event" class="<?= $currentType == 'event' ? 'active' : '' ?>">Событие</a>
+</div>
+     <?php foreach($post as $value){ ?>
+  <div class="post" onclick="togglePost(this)">
+    
+    <div class="post-header">
+      <span class="post-title">
+        <?= $value['title'] ?>
+      </span>
+
+      <span class="arrow">▾</span>
+    </div>
+
+    <div class="post-content">
+      <?= $value['content'] ?>
+    </div>
+
+  </div>
+<?php } ?>
     </aside>
 
 <main class="center-panel">
@@ -118,7 +149,7 @@ $spiritual = $stats['spiritual'] ?? 0;
     </form>
   </div>
 
-  <!-- 🚬 НОВОЕ -->
+  <!-- 🚬 -->
   <div class="action-wrapper">
     <div class="action-btn">🚬</div>
 
@@ -211,6 +242,34 @@ $spiritual = $stats['spiritual'] ?? 0;
 <div class="drawer left-drawer" id="postsDrawer">
     <button class="close-btn">✖</button>
     <h3>Посты</h3>
+    <?php 
+$currentType = $_GET['type'] ?? 'all';
+?>
+
+<div class="menu_left">
+  <a href="index.php" class="<?= $currentType == 'all' ? 'active' : '' ?>">Все</a>
+  <a href="index.php?type=info" class="<?= $currentType == 'info' ? 'active' : '' ?>">Новости</a>
+  <a href="index.php?type=motivation" class="<?= $currentType == 'motivation' ? 'active' : '' ?>">Мотивация</a>
+  <a href="index.php?type=warning" class="<?= $currentType == 'warning' ? 'active' : '' ?>">Предупреждение</a>
+  <a href="index.php?type=event" class="<?= $currentType == 'event' ? 'active' : '' ?>">Событие</a>
+</div>
+    <?php foreach($post as $value){ ?>
+  <div class="post" onclick="togglePost(this)">
+    
+    <div class="post-header">
+      <span class="post-title">
+        <?= $value['title'] ?>
+      </span>
+
+      <span class="arrow">▾</span>
+    </div>
+
+    <div class="post-content">
+      <?= $value['content'] ?>
+    </div>
+
+  </div>
+<?php } ?>
 </div>
 
 <!-- ПРАВАЯ ПАНЕЛЬ -->
@@ -231,6 +290,7 @@ $spiritual = $stats['spiritual'] ?? 0;
 
 
   <script src="/assets/js/modal.js" defer></script>
+  <script src="/assets/js/post_click.js" defer></script>
   <script src="/assets/js/effectavto.js" defer></script>
   <script src="/assets/js/effectras.js" defer></script>
   <script src="/assets/js/main.js" defer></script>
