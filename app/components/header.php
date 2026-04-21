@@ -31,7 +31,7 @@ $roleId = $_SESSION['user']['role_id'] ?? null;
         <?php if ($userId): ?>
 
             <a href="<?= BASE_URL ?>logout.php" class="nav-exit" title="Выход">
-                <i data-lucide="door-open"></i>
+                Выход
             </a>
 
             <a href="<?= BASE_URL ?>index.php">Главная</a>

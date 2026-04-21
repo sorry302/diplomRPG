@@ -5,3 +5,10 @@ function togglePost(el) {
 
     el.classList.toggle('active');
 }
+function loadPosts(type = 'all') {
+    fetch('/app/functions/get_posts.php?type=' + type)
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('posts-container').innerHTML = html;
+        });
+}

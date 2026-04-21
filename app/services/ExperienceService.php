@@ -56,16 +56,31 @@ class ExperienceService
         }
     }
 
-    private function levelUp(int $userId, int $newLevel): void
-    {
-        $userId   = (int)$userId;
-        $newLevel = (int)$newLevel;
+private function levelUp(int $userId, int $newLevel): void
+{
+    $userId   = (int)$userId;
+    $newLevel = (int)$newLevel;
 
-        mysqli_query($this->conn, "
-            UPDATE experience
-            SET level = $newLevel
-            WHERE user_id = $userId
-        ");
+    mysqli_query($this->conn, "
+        UPDATE experience
+        SET level = $newLevel
+        WHERE user_id = $userId
+    ");
 
-    }
+    $this->addNotification(
+        $userId,
+        "⬆ Вы достигли уровня $newLevel!",
+        "level_up"
+    );
+}
+    private function addNotification(int $userId, string $message, string $type): void
+{
+    $message = mysqli_real_escape_string($this->conn, $message);
+    $type    = mysqli_real_escape_string($this->conn, $type);
+
+    mysqli_query($this->conn, "
+        INSERT INTO notifications (user_id, message, type)
+        VALUES ($userId, '$message', '$type')
+    ");
+}
 }

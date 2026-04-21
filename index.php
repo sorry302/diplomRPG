@@ -31,35 +31,32 @@ $post = $conn->query("SELECT * FROM `posts` WHERE `type` = '{$_GET['type']}'");
 <div class="main-layout">
 
 <aside class="left-panel">
-    <?php 
-$currentType = $_GET['type'] ?? 'all';
-?>
 
 <div class="menu_left">
-  <a href="index.php" class="<?= $currentType == 'all' ? 'active' : '' ?>">Все</a>
-  <a href="index.php?type=info" class="<?= $currentType == 'info' ? 'active' : '' ?>">Новости</a>
-  <a href="index.php?type=motivation" class="<?= $currentType == 'motivation' ? 'active' : '' ?>">Мотивация</a>
-  <a href="index.php?type=warning" class="<?= $currentType == 'warning' ? 'active' : '' ?>">Предупреждение</a>
-  <a href="index.php?type=event" class="<?= $currentType == 'event' ? 'active' : '' ?>">Событие</a>
+    <a href="#" onclick="loadPosts('all'); return false;">Все</a>
+    <a href="#" onclick="loadPosts('info'); return false;">Новости</a>
+    <a href="#" onclick="loadPosts('motivation'); return false;">Мотивация</a>
+    <a href="#" onclick="loadPosts('warning'); return false;">Предупреждение</a>
+    <a href="#" onclick="loadPosts('event'); return false;">Событие</a>
 </div>
-     <?php foreach($post as $value){ ?>
-  <div class="post" onclick="togglePost(this)">
-    
-    <div class="post-header">
-      <span class="post-title">
-        <?= $value['title'] ?>
-      </span>
 
-      <span class="arrow">▾</span>
-    </div>
+<!-- 🔥 ВАЖНО: только контейнер -->
+<div id="posts-container">
+    <?php foreach($post as $value){ ?>
+        <div class="post" onclick="togglePost(this)">
+            <div class="post-header">
+                <span class="post-title"><?= $value['title'] ?></span>
+                <span class="arrow">▾</span>
+            </div>
 
-    <div class="post-content">
-      <?= $value['content'] ?>
-    </div>
+            <div class="post-content">
+                <?= $value['content'] ?>
+            </div>
+        </div>
+    <?php } ?>
+</div>
 
-  </div>
-<?php } ?>
-    </aside>
+</aside>
 
 <main class="center-panel">
 
@@ -227,27 +224,23 @@ $currentType = $_GET['type'] ?? 'all';
 <aside class="right-panel">
 
 <?php
-
-
 $userId = $_SESSION['user']['user_id'] ?? 0;
-
-
-
 $result = mysqli_query($conn, "
     SELECT * FROM notifications
     WHERE user_id = $userId
     ORDER BY created_at DESC
     LIMIT 10
 ");
-
-
+if(!empty($result)){
 while ($n = mysqli_fetch_assoc($result)) {
     echo "<div class='notification {$n['type']}'>
             <p>{$n['message']}</p>
           </div>";
 }
+}else{
+  echo "У вас пока нет уведомлений";
+}
 ?>
-
 </aside>
 
 </div>
@@ -267,35 +260,45 @@ $currentType = $_GET['type'] ?? 'all';
 ?>
 
 <div class="menu_left">
-  <a href="index.php" class="<?= $currentType == 'all' ? 'active' : '' ?>">Все</a>
-  <a href="index.php?type=info" class="<?= $currentType == 'info' ? 'active' : '' ?>">Новости</a>
-  <a href="index.php?type=motivation" class="<?= $currentType == 'motivation' ? 'active' : '' ?>">Мотивация</a>
-  <a href="index.php?type=warning" class="<?= $currentType == 'warning' ? 'active' : '' ?>">Предупреждение</a>
-  <a href="index.php?type=event" class="<?= $currentType == 'event' ? 'active' : '' ?>">Событие</a>
-</div>
-    <?php foreach($post as $value){ ?>
-  <div class="post" onclick="togglePost(this)">
-    
-    <div class="post-header">
-      <span class="post-title">
-        <?= $value['title'] ?>
-      </span>
-
-      <span class="arrow">▾</span>
+        <a href="#" onclick="loadPosts('all'); return false;">Все</a>
+        <a href="#" onclick="loadPosts('info'); return false;">Новости</a>
+        <a href="#" onclick="loadPosts('motivation'); return false;">Мотивация</a>
+        <a href="#" onclick="loadPosts('warning'); return false;">Предупреждение</a>
+        <a href="#" onclick="loadPosts('event'); return false;">Событие</a>
     </div>
-
-    <div class="post-content">
-      <?= $value['content'] ?>
+     <div id="posts-container">
+        <?php foreach($post as $value){ ?>
+            <div class="post" onclick="togglePost(this)">
+                <div class="post-header">
+                    <span class="post-title"><?= $value['title'] ?></span>
+                    <span class="arrow">▾</span>
+                </div>
+                <div class="post-content">
+                    <?= $value['content'] ?>
+                </div>
+            </div>
+        <?php } ?>
     </div>
-
-  </div>
-<?php } ?>
 </div>
 
 <!-- ПРАВАЯ ПАНЕЛЬ -->
 <div class="drawer right-drawer" id="notificationsDrawer">
     <button class="close-btn">✖</button>
     <h3>Уведомления</h3>
+    <?php
+$userId = $_SESSION['user']['user_id'] ?? 0;
+$result = mysqli_query($conn, "
+    SELECT * FROM notifications
+    WHERE user_id = $userId
+    ORDER BY created_at DESC
+    LIMIT 10
+");
+while ($n = mysqli_fetch_assoc($result)) {
+    echo "<div class='notification {$n['type']}'>
+            <p>{$n['message']}</p>
+          </div>";
+}
+?>
 </div>
 
 <!-- OVERLAY -->

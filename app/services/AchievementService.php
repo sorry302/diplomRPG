@@ -11,6 +11,8 @@ class AchievementService
         $this->userId = (int)$userId;
     }
 
+
+    //проверка всех достижений
     public function checkAll(): void
     {
         $result = mysqli_query($this->conn, "
@@ -47,7 +49,7 @@ class AchievementService
             }
         }
     }
-
+//проверка конкретного условия
     private function checkCondition(string $type, int $value): bool
     {
         $userId = $this->userId;
@@ -124,6 +126,8 @@ class AchievementService
         return false;
     }
 
+
+    //Выдает достижения
  private function unlock(int $achievementId): void
 {
     $userId = $this->userId;
@@ -159,6 +163,7 @@ class AchievementService
 
     $this->addNotification($message, 'achievement');
 }
+//Добовляет запись в табл. notifications
 private function addNotification($message, $type = 'achievement')
 {
     $userId = $this->userId;
