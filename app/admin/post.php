@@ -147,8 +147,74 @@ $posts = mysqli_query($conn, "SELECT * FROM posts ORDER BY id DESC");
     .badge-active { background: #28a745; color: #fff; }
     .badge-inactive { background: #555; color: #ccc; }
     .badge-pinned { background: #ffd700; color: #000; }
-</style>
 
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .admin-container {
+            padding: 10px;
+        }
+
+        .panel {
+            padding: 15px;
+        }
+
+        .add-post-form div[style*="grid-template-columns"] {
+            grid-template-columns: 1fr !important; /* Селект и чекбоксы в одну колонку */
+        }
+
+        .checkbox-group {
+            justify-content: space-around;
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .rpg-table thead {
+            display: none;
+        }
+
+        .rpg-table, .rpg-table tbody, .rpg-table tr, .rpg-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .rpg-table tr {
+            margin-bottom: 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+        }
+
+        .rpg-table td {
+            text-align: right;
+            padding: 8px 10px;
+            border-bottom: 1px solid #333;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .rpg-table td:last-child {
+            border-bottom: none;
+        }
+
+        .rpg-table td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            font-size: 11px;
+            margin-right: 15px;
+        }
+
+        .actions {
+            justify-content: flex-end;
+        }
+    }
+</style>
 <main class="admin-container">
     <div class="panel">
         <h3 style="margin-top: 0; color: var(--accent-gold);">
@@ -192,27 +258,29 @@ $posts = mysqli_query($conn, "SELECT * FROM posts ORDER BY id DESC");
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($posts)): ?>
                     <tr>
-                        <td style="font-weight: bold; color: #fff;">
+                        <td data-label="Заголовок" style="font-weight: bold; color: #fff;">
                             <?= htmlspecialchars($row['title']) ?>
                         </td>
-                        <td>
+                        <td data-label="Тип">
                             <span style="color: #aaa; font-size: 12px;"><?= strtoupper($row['type']) ?></span>
                         </td>
-                        <td>
-                            <?php if($row['is_active']): ?>
-                                <span class="badge badge-active">Active</span>
-                            <?php else: ?>
-                                <span class="badge badge-inactive">Draft</span>
-                            <?php endif; ?>
-                            
-                            <?php if($row['is_pinned']): ?>
-                                <span class="badge badge-pinned">PIN</span>
-                            <?php endif; ?>
+                        <td data-label="Статус">
+                            <div>
+                                <?php if($row['is_active']): ?>
+                                    <span class="badge badge-active">Active</span>
+                                <?php else: ?>
+                                    <span class="badge badge-inactive">Draft</span>
+                                <?php endif; ?>
+                                
+                                <?php if($row['is_pinned']): ?>
+                                    <span class="badge badge-pinned">PIN</span>
+                                <?php endif; ?>
+                            </div>
                         </td>
-                        <td style="color: #888; font-size: 12px;">
+                        <td data-label="Дата" style="color: #888; font-size: 12px;">
                             <?= date('d.m.Y H:i', strtotime($row['created_at'])) ?>
                         </td>
-                        <td class="actions">
+                        <td data-label="Действия" class="actions">
                             <a href="edit_post.php?id=<?= $row['id'] ?>" class="btn-edit" title="Редактировать">✏️</a>
                             <a href="?delete=<?= $row['id'] ?>" class="btn-delete" title="Удалить" onclick="return confirm('Удалить пост?')">🗑️</a>
                         </td>

@@ -2,7 +2,7 @@
 session_start();
 require 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['password'])) {
+if (isset($_POST['username'], $_POST['password'])) {
     
     $username = trim($_POST['username']);
     $password = $_POST['password'];

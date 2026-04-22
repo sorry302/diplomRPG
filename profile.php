@@ -7,7 +7,7 @@ $actionFeedback = $_SESSION['action_feedback'] ?? null;
 unset($_SESSION['action_feedback']);
 
 
-/* ===== ПОЛЬЗОВАТЕЛЬ ===== */
+/* ПОЛЬЗОВАТЕЛЬ*/
 $query = "
     SELECT u.username, u.created_at,
            e.level, e.exp
@@ -17,7 +17,7 @@ $query = "
 ";
 $user = $conn->query($query)->fetch_assoc();
 
-/* ===== СТАТЫ ===== */
+/* СТАТЫ */
 $query = "
     SELECT stat_code, value
     FROM user_stats
@@ -30,7 +30,7 @@ while ($row = $result->fetch_assoc()) {
     $stats[$row['stat_code']] = $row['value'];
 }
 
-/* ===== Достижение ===== */
+/*  Достижение  */
 $query = "
     SELECT a.title, a.description, a.icon, ua.achieved_at
     FROM user_achievements ua
@@ -40,7 +40,7 @@ $query = "
 ";
 $achievements = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
 
-/* ===== АКТИВНОСТЬ ===== */
+/* АКТИВНОСТЬ*/
 $query = "
     (
         SELECT 

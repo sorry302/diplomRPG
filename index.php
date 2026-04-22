@@ -267,14 +267,14 @@ $currentType = $_GET['type'] ?? 'all';
         <a href="#" onclick="loadPosts('event'); return false;">Событие</a>
     </div>
      <div id="posts-container">
-        <?php foreach($post as $value){ ?>
+        <?php foreach($post as $values){ ?>
             <div class="post" onclick="togglePost(this)">
                 <div class="post-header">
-                    <span class="post-title"><?= $value['title'] ?></span>
+                    <span class="post-title"><?= $values['title'] ?></span>
                     <span class="arrow">▾</span>
                 </div>
                 <div class="post-content">
-                    <?= $value['content'] ?>
+                    <?= $values['content'] ?>
                 </div>
             </div>
         <?php } ?>

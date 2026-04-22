@@ -131,9 +131,67 @@ require_once __DIR__ . '/../components/header.php';
     .btn-delete:hover {
         transform: scale(1.3);
     }
-</style>
 
-<main class="admin-container">
+    /* Адаптивность таблицы */
+    @media (max-width: 768px) {
+        .rpg-table thead {
+            display: none; /* Скрываем заголовки на мобилках */
+        }
+
+        .rpg-table, .rpg-table tbody, .rpg-table tr, .rpg-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .rpg-table tr {
+            margin-bottom: 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+        }
+
+        .rpg-table td {
+            text-align: right;
+            padding: 8px 10px;
+            border-bottom: 1px solid #333;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rpg-table td:last-child {
+            border-bottom: none;
+        }
+
+        .rpg-table td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            font-size: 11px;
+            margin-right: 15px;
+        }
+
+        .icon-cell {
+            width: 100% !important;
+            font-size: 32px;
+            justify-content: center !important;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .actions {
+            justify-content: flex-end;
+        }
+
+        .title-wrapper {
+            text-align: right;
+        }
+    }
+</style><main class="admin-container">
     <div class="panel">
         <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--accent-gold);">
             🏆 Создать новое достижение
@@ -205,22 +263,22 @@ require_once __DIR__ . '/../components/header.php';
                     while($ach = mysqli_fetch_assoc($res)):
                     ?>
                     <tr>
-                        <td class="icon-cell"><?= htmlspecialchars($ach['icon']) ?></td>
-                        <td>
-                            <div style="font-weight: bold; color: #fff;"><?= htmlspecialchars($ach['title']) ?></div>
-                            <div style="font-size: 11px; color: #888;"><?= htmlspecialchars($ach['code']) ?></div>
-                        </td>
-                       
-                        <td style="font-size: 13px; color: #ccc;"><?= htmlspecialchars($ach['description']) ?></td>
-                        <td class="actions">
+                        <td class="icon-cell" data-label="Иконка"><?= htmlspecialchars($ach['icon']) ?></td>
+                        <td data-label="Название">
+                            <div class="title-wrapper">
+                                <div style="font-weight: bold; color: #fff;"><?= htmlspecialchars($ach['title']) ?></div>
+                                <div style="font-size: 11px; color: #888;"><?= htmlspecialchars($ach['code']) ?></div>
+                            </div>
+                        </td>                       
+                        <td data-label="Описание" style="font-size: 13px; color: #ccc;"><?= htmlspecialchars($ach['description']) ?></td>
+                        <td class="actions" data-label="Действия">
                             <a href="delete_achievement.php?id=<?= (int)$ach['id'] ?>" 
                                class="btn-delete" 
                                onclick="return confirm('Удалить достижение?')">🗑️</a>
                         </td>
                     </tr>
                     <?php endwhile; ?>
-                </tbody>
-            </table>
+                </tbody>            </table>
         </div>
     </div>
 </main>

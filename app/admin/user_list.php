@@ -114,8 +114,74 @@ require_once __DIR__ . '/../components/header.php';
     .btn-edit:hover, .btn-delete:hover {
         transform: scale(1.2);
     }
-</style>
 
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .admin-container {
+            padding: 10px;
+        }
+
+        .panel {
+            padding: 15px;
+        }
+
+        .filters {
+            flex-wrap: wrap;
+            gap: 8px !important;
+        }
+
+        .filter-btn {
+            flex: 1 1 calc(50% - 8px);
+            text-align: center;
+            padding: 10px 5px;
+        }
+
+        .rpg-table thead {
+            display: none;
+        }
+
+        .rpg-table, .rpg-table tbody, .rpg-table tr, .rpg-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .rpg-table tr {
+            margin-bottom: 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+        }
+
+        .rpg-table td {
+            text-align: right;
+            padding: 8px 10px;
+            border-bottom: 1px solid #333;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .rpg-table td:last-child {
+            border-bottom: none;
+        }
+
+        .rpg-table td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            font-size: 11px;
+            margin-right: 15px;
+        }
+
+        .actions {
+            justify-content: flex-end;
+        }
+    }
+</style>
 <main class="admin-container">    <div class="panel">
 
         <h3 style="margin-top: 0; color: var(--accent-gold);">
@@ -187,32 +253,31 @@ require_once __DIR__ . '/../components/header.php';
                 ?>
 
                     <tr>
-                        <td>#<?= (int)$user['id'] ?></td>
+                        <td data-label="ID">#<?= (int)$user['id'] ?></td>
 
-                        <td style="font-weight: bold;">
+                        <td data-label="Имя" style="font-weight: bold;">
                             <?= htmlspecialchars($user['username']) ?>
                         </td>
 
-                        <td>
+                        <td data-label="Роль">
                             <span class="badge <?= $roleClass ?>">
                                 <?= $roleName ?>
                             </span>
                         </td>
 
-                        <td>
+                        <td data-label="Уровень">
                             <span class="level-badge">⭐ <?= $level ?></span>
                         </td>
 
-                        <td><?= $exp ?> XP</td>
+                        <td data-label="Опыт"><?= $exp ?> XP</td>
 
-                        <td class="actions">
+                        <td data-label="Действия" class="actions">
                             <a href="edit_user.php?id=<?= (int)$user['id'] ?>" class="btn-edit">✏️</a>
                             <a href="delete_user.php?id=<?= (int)$user['id'] ?>"
                                class="btn-delete"
                                onclick="return confirm('Вы уверены? Это действие необратимо!')">🗑️</a>
                         </td>
                     </tr>
-
                 <?php
                     endwhile;
                 endif;

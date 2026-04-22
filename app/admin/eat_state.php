@@ -130,8 +130,67 @@ require_once __DIR__ . '/../components/header.php';
     summary:hover {
         background: rgba(255,255,255,0.1);
     }
-</style>
 
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .admin-container {
+            padding: 10px;
+        }
+
+        .panel {
+            padding: 15px;
+        }
+
+        .add-food-form {
+            grid-template-columns: 1fr; /* Форма в одну колонку */
+        }
+
+        .rpg-table thead {
+            display: none;
+        }
+
+        .rpg-table, .rpg-table tbody, .rpg-table tr, .rpg-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .rpg-table tr {
+            margin-bottom: 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+        }
+
+        .rpg-table td {
+            text-align: right;
+            padding: 8px 10px;
+            border-bottom: 1px solid #333;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .rpg-table td:last-child {
+            border-bottom: none;
+        }
+
+        .rpg-table td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            font-size: 11px;
+            margin-right: 15px;
+        }
+
+        .actions {
+            justify-content: flex-end;
+        }
+    }
+</style>
 <main class="admin-container">
     <div class="panel">
 
@@ -195,36 +254,35 @@ require_once __DIR__ . '/../components/header.php';
                 ?>
 
                     <tr>
-                        <td>#<?= (int)$food['id'] ?></td>
+                        <td data-label="ID">#<?= (int)$food['id'] ?></td>
 
-                        <td style="font-weight: bold;">
+                        <td data-label="Название" style="font-weight: bold;">
                             <?= htmlspecialchars($food['name']) ?>
                         </td>
 
-                        <td>
+                        <td data-label="Тип">
                             <span class="badge <?= htmlspecialchars($typeClass) ?>">
                                 <?= $typeName ?>
                             </span>
                         </td>
 
-                        <td><?= (int)$food['calories'] ?></td>
+                        <td data-label="Ккал"><?= (int)$food['calories'] ?></td>
 
-                        <td class="<?= $food['health_change'] >= 0 ? 'pos' : 'neg' ?>">
+                        <td data-label="❤️ HP" class="<?= $food['health_change'] >= 0 ? 'pos' : 'neg' ?>">
                             <?= ($food['health_change'] > 0 ? '+' : '') . (int)$food['health_change'] ?>  
                         </td>
 
-                        <td class="<?= $food['obesity_change'] <= 0 ? 'pos' : 'neg' ?>">
+                        <td data-label="🍔 Жир" class="<?= $food['obesity_change'] <= 0 ? 'pos' : 'neg' ?>">
                             <?= ($food['obesity_change'] > 0 ? '+' : '') . (int)$food['obesity_change'] ?>
                         </td>
 
-                        <td class="actions">
+                        <td data-label="Действия" class="actions">
                             <a href="edit_food.php?id=<?= (int)$food['id'] ?>" class="btn-edit">✏️</a>
                             <a href="delete_food.php?id=<?= (int)$food['id'] ?>"
                                class="btn-delete"
                                onclick="return confirm('Удалить?')">🗑️</a>
                         </td>
                     </tr>
-
                 <?php
                     endwhile;
                 endif;

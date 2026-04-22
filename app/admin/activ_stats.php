@@ -118,8 +118,67 @@ require_once __DIR__ . '/../components/header.php';
     summary:hover {
         background: rgba(255,255,255,0.1);
     }
-</style>
 
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .admin-container {
+            padding: 10px;
+        }
+
+        .panel {
+            padding: 15px;
+        }
+
+        .add-activity-form {
+            grid-template-columns: 1fr;
+        }
+
+        .rpg-table thead {
+            display: none;
+        }
+
+        .rpg-table, .rpg-table tbody, .rpg-table tr, .rpg-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .rpg-table tr {
+            margin-bottom: 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px;
+        }
+
+        .rpg-table td {
+            text-align: right;
+            padding: 8px 10px;
+            border-bottom: 1px solid #333;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .rpg-table td:last-child {
+            border-bottom: none;
+        }
+
+        .rpg-table td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            font-size: 11px;
+            margin-right: 15px;
+        }
+
+        .actions {
+            justify-content: flex-end;
+        }
+    }
+</style>
 <main class="admin-container">
     <div class="panel">
 
@@ -199,35 +258,35 @@ require_once __DIR__ . '/../components/header.php';
                 <?php while ($act = mysqli_fetch_assoc($result)): ?>
 
                     <tr>
-                        <td style="font-weight: bold;">
+                        <td data-label="Название" style="font-weight: bold;">
                             <?= htmlspecialchars($act['name']) ?>
                         </td>
 
-                        <td class="<?= $act['health_change'] >= 0 ? 'pos' : 'neg' ?>">
+                        <td data-label="❤️ HP" class="<?= $act['health_change'] >= 0 ? 'pos' : 'neg' ?>">
                             <?= (int)$act['health_change'] ?>
                         </td>
 
-                        <td class="<?= $act['physical_change'] >= 0 ? 'pos' : 'neg' ?>">
+                        <td data-label="💪 Физ" class="<?= $act['physical_change'] >= 0 ? 'pos' : 'neg' ?>">
                             <?= (int)$act['physical_change'] ?>
                         </td>
 
-                        <td class="<?= $act['intellectual_change'] >= 0 ? 'pos' : 'neg' ?>">
+                        <td data-label="🧠 Инт" class="<?= $act['intellectual_change'] >= 0 ? 'pos' : 'neg' ?>">
                             <?= (int)$act['intellectual_change'] ?>
                         </td>
 
-                        <td class="<?= $act['spiritual_change'] >= 0 ? 'pos' : 'neg' ?>">
+                        <td data-label="🧘 Дух" class="<?= $act['spiritual_change'] >= 0 ? 'pos' : 'neg' ?>">
                             <?= (int)$act['spiritual_change'] ?>
                         </td>
 
-                        <td class="<?= $act['obesity_change'] <= 0 ? 'pos' : 'neg' ?>">
+                        <td data-label="🍔 Жир" class="<?= $act['obesity_change'] <= 0 ? 'pos' : 'neg' ?>">
                             <?= (int)$act['obesity_change'] ?>
                         </td>
 
-                        <td class="pos">
+                        <td data-label="🔥 XP" class="pos">
                             +<?= (int)$act['exp_change'] ?>
                         </td>
 
-                        <td class="actions">
+                        <td data-label="Действия" class="actions">
                             <a href="edit_activity.php?id=<?= (int)$act['id'] ?>" class="btn-edit">✏️</a>
                             <a href="delete_activity.php?id=<?= (int)$act['id'] ?>" 
                                class="btn-delete"
@@ -236,7 +295,6 @@ require_once __DIR__ . '/../components/header.php';
                     </tr>
 
                 <?php endwhile; ?>
-
                 </tbody>
             </table>
         </div>
