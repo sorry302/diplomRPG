@@ -40,7 +40,7 @@ $post = $conn->query("SELECT * FROM `posts` WHERE `type` = '{$_GET['type']}'");
     <a href="#" onclick="loadPosts('event'); return false;">Событие</a>
 </div>
 
-<!-- 🔥 ВАЖНО: только контейнер -->
+
 <div id="posts-container">
     <?php foreach($post as $value){ ?>
         <div class="post" onclick="togglePost(this)">
@@ -189,7 +189,7 @@ $post = $conn->query("SELECT * FROM `posts` WHERE `type` = '{$_GET['type']}'");
     }
 
     renderStat('Здоровье', $health, 'health');
-    renderStat('Жирность', $fat, 'fat');
+    renderStat('Калорийность', $fat, 'fat');
     renderStat('Интеллект', $intellect, 'intellect');
     renderStat('Физическая', $physical, 'energy');
     renderStat('Духовность', $spiritual, 'spiritual');

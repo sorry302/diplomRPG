@@ -36,7 +36,7 @@ $roleId = $_SESSION['user']['role_id'] ?? null;
 
             <a href="<?= BASE_URL ?>index.php">Главная</a>
             <a href="<?= BASE_URL ?>profile.php">Профиль</a>
-            <!-- <a href="#">Помощь</a> -->
+            <a href="<?= BASE_URL ?>help.php">Помощь</a>
 
             <?php if ($roleId == 3): ?>
                 <a href="/app/admin/admin_panel.php">Админ панель</a>

@@ -799,3 +799,118 @@ button:active {
         display: none;
     }
 }
+
+/* помощь */
+ .help-page-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 0 15px;
+    }
+
+    .help-menu {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        overflow-x: auto;
+        padding: 5px 5px 15px 5px;
+        scrollbar-width: none; 
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .help-menu::-webkit-scrollbar {
+        display: none;
+    }
+
+    .help-menu a {
+        flex-shrink: 0;
+        white-space: nowrap;
+        padding: 10px 20px;        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid #444;
+        border-radius: 20px;
+        color: #ccc;
+        text-decoration: none;
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+
+    .help-menu a.active {
+        background: var(--accent-gold, #ffd700);
+        color: #000;
+        border-color: var(--accent-gold, #ffd700);
+        font-weight: bold;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .help-item {
+        background: rgba(30, 30, 35, 0.9);
+        border: 1px solid #444;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        transition: border-color 0.3s;
+        cursor: pointer;
+    }
+
+    .help-item:hover {
+        border-color: #666;
+    }
+
+    .help-header {
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .help-header h3 {
+        margin: 0;
+        font-size: 16px;
+        color: var(--accent-gold, #ffd700);
+    }
+
+    .help-header::after {
+        content: '▼';
+        font-size: 12px;
+        color: #666;
+        transition: transform 0.3s;
+    }
+
+    .help-item.active .help-header::after {
+        transform: rotate(180deg);
+        color: var(--accent-gold, #ffd700);
+    }
+
+    .help-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out, padding 0.3s;
+        padding: 0 20px;
+        background: rgba(0, 0, 0, 0.2);
+        color: #bbb;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .help-item.active .help-content {
+        max-height: 1000px;
+        padding: 15px 20px;
+        border-top: 1px solid #333;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+        .help-header h3 {
+            font-size: 15px;
+        }
+        .help-content {
+            font-size: 13px;
+        }
+    }

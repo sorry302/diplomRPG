@@ -58,6 +58,14 @@ require_once __DIR__ . '/../components/header.php';
                 </div>
             </a>
 
+            <a href="admin_help.php" class="admin-card">
+                <div class="card-icon">🤖</div>
+                <div class="card-info">
+                    <h4>Помощь</h4>
+                    <p>Добавление или редактироание помощи</p>
+                </div>
+            </a>
+
         </div>
 
     </div>
