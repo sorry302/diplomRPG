@@ -230,7 +230,7 @@ require_once __DIR__ . '/../components/header.php';
                 if ($result):
                     while ($user = mysqli_fetch_assoc($result)):
 
-                        // ===== РОЛИ =====
+                        // Роли
                         $roleName = 'Неизвестно';
                         $roleClass = 'role-user';
 
@@ -273,9 +273,7 @@ require_once __DIR__ . '/../components/header.php';
 
                         <td data-label="Действия" class="actions">
                             <a href="edit_user.php?id=<?= (int)$user['id'] ?>" class="btn-edit">✏️</a>
-                            <a href="delete_user.php?id=<?= (int)$user['id'] ?>"
-                               class="btn-delete"
-                               onclick="return confirm('Вы уверены? Это действие необратимо!')">🗑️</a>
+                            <a href="delete_user.php?id=<?= (int)$user['id'] ?>" class="btn-delete" onclick="return confirm('Вы уверены? Это действие необратимо!')">🗑️</a>
                         </td>
                     </tr>
                 <?php

@@ -267,9 +267,9 @@ $posts = mysqli_query($conn, "SELECT * FROM posts ORDER BY id DESC");
                         <td data-label="Статус">
                             <div>
                                 <?php if($row['is_active']): ?>
-                                    <span class="badge badge-active">Active</span>
+                                    <span class="badge badge-active">Активен</span>
                                 <?php else: ?>
-                                    <span class="badge badge-inactive">Draft</span>
+                                    <span class="badge badge-inactive">Закреплен</span>
                                 <?php endif; ?>
                                 
                                 <?php if($row['is_pinned']): ?>
@@ -282,7 +282,7 @@ $posts = mysqli_query($conn, "SELECT * FROM posts ORDER BY id DESC");
                         </td>
                         <td data-label="Действия" class="actions">
                             <a href="edit_post.php?id=<?= $row['id'] ?>" class="btn-edit" title="Редактировать">✏️</a>
-                            <a href="?delete=<?= $row['id'] ?>" class="btn-delete" title="Удалить" onclick="return confirm('Удалить пост?')">🗑️</a>
+                            <a href="del_post.php?delete=<?= $row['id'] ?>" class="btn-delete" title="Удалить" onclick="return confirm('Удалить пост?')">🗑️</a>
                         </td>
                     </tr>
                     <?php endwhile; ?>

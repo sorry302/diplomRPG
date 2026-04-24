@@ -250,7 +250,7 @@ $help_list = $conn -> query("SELECT * FROM `help`");
                         <td data-label="Статус">
                             <div>
                                 <?php if($row['is_active'] == 1): ?>
-                                    <span class="badge badge-active">Показывает</span>
+                                    <span class="badge badge-active">Активен</span>
                                 <?php else: ?>
                                     <span class="badge badge-inactive">Скрыт</span>
                                 <?php endif; ?>
@@ -261,7 +261,7 @@ $help_list = $conn -> query("SELECT * FROM `help`");
                             <?= date('d.m.Y H:i', strtotime($row['created_at'])) ?>
                         </td>
                         <td data-label="Действия" class="actions">
-                            <a href="edit_post.php?id=<?= $row['id'] ?>" class="btn-edit" title="Редактировать">✏️</a>
+                            <a href="edit_help.php?id=<?= $row['id'] ?>" class="btn-edit" title="Редактировать">✏️</a>
                             <?php 
                             if($row['is_active'] == 2){
                             ?>
