@@ -7,6 +7,11 @@ require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../functions/admin_check.php';
 require_once __DIR__ . '/../functions/db.php';
 require_once __DIR__ . '/../components/header.php';
+
+if(isset($_GET['id'])){
+    $conn->query("DELETE FROM foods WHERE `id` = '{$_GET['id']}'");
+    header("Location: eat_state.php");
+}
 ?>
 
 <style>
@@ -278,7 +283,7 @@ require_once __DIR__ . '/../components/header.php';
 
                         <td data-label="Действия" class="actions">
                             <a href="edit_food.php?id=<?= (int)$food['id'] ?>" class="btn-edit">✏️</a>
-                            <a href="delete_food.php?id=<?= (int)$food['id'] ?>"
+                            <a href="eat_state.php?id=<?= (int)$food['id'] ?>"
                                class="btn-delete"
                                onclick="return confirm('Удалить?')">🗑️</a>
                         </td>

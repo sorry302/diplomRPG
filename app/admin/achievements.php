@@ -7,6 +7,11 @@ require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../functions/admin_check.php';
 require_once __DIR__ . '/../functions/db.php';
 require_once __DIR__ . '/../components/header.php';
+
+if(isset($_GET['id'])){
+    $conn->query("DELETE FROM achievements WHERE `id` = '{$_GET['id']}'");
+    header("Location: achievements.php");
+}
 ?>
 
 <style>
@@ -272,13 +277,13 @@ require_once __DIR__ . '/../components/header.php';
                         </td>                       
                         <td data-label="Описание" style="font-size: 13px; color: #ccc;"><?= htmlspecialchars($ach['description']) ?></td>
                         <td class="actions" data-label="Действия">
-                            <a href="delete_achievement.php?id=<?= (int)$ach['id'] ?>" 
-                               class="btn-delete" 
-                               onclick="return confirm('Удалить достижение?')">🗑️</a>
+                            <a href="edit_achievement.php?id=<?= (int)$ach['id'] ?>" class="btn-delete">✏️</a>
+                            <a href="achievements.php?id=<?= (int)$ach['id'] ?>" class="btn-delete" onclick="return confirm('Удалить достижение?')">🗑️</a>
                         </td>
                     </tr>
                     <?php endwhile; ?>
-                </tbody>            </table>
+                </tbody>            
+            </table>
         </div>
     </div>
 </main>

@@ -7,6 +7,11 @@ require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../functions/admin_check.php';
 require_once __DIR__ . '/../functions/db.php';
 require_once __DIR__ . '/../components/header.php';
+
+if(isset($_GET['id'])){
+    $conn->query("DELETE FROM activities WHERE `id` = '{$_GET['id']}'");
+    header("Location: activ_stats.php");
+}
 ?>
 
 <style>
@@ -236,7 +241,7 @@ require_once __DIR__ . '/../components/header.php';
         ?>
 
         <h4 style="color: var(--text-muted); margin-bottom: 10px; border-left: 3px solid var(--accent-gold); padding-left: 10px;">
-            <?= htmlspecialchars($catName) ?>
+            <?= $catName ?>
         </h4>
 
         <div class="table-responsive" style="margin-bottom: 30px;">
@@ -288,7 +293,7 @@ require_once __DIR__ . '/../components/header.php';
 
                         <td data-label="Действия" class="actions">
                             <a href="edit_activity.php?id=<?= (int)$act['id'] ?>" class="btn-edit">✏️</a>
-                            <a href="delete_activity.php?id=<?= (int)$act['id'] ?>" 
+                            <a href="activ_stats.php?id=<?= (int)$act['id'] ?>" 
                                class="btn-delete"
                                onclick="return confirm('Удалить?')">🗑️</a>
                         </td>
