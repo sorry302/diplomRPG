@@ -205,7 +205,7 @@ $post = $conn->query("SELECT * FROM `posts` WHERE `type` = '{$_GET['type']}'");
   <!-- ===== МОДАЛКА ===== -->
   <div id="profileModal" class="modal" style="display:none;">
     <div class="modal-content">
-      <span class="close">&times;</span>
+
 
       <h2>Создание персонажа</h2>
       <p>Укажи параметры героя, чтобы начать прокачку.</p>
